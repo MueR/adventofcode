@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use MueR\AdventOfCode2021\AbstractSolver;
+use MueR\AdventOfCode\AbstractSolver;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -10,20 +10,20 @@ $arguments = $argv;
 
 $informationArray = [];
 
-if (array_key_exists(1, $arguments)) {
-    $day = $arguments[1];
-    $informationArray[] = printDay((int)$day);
-} else {
-    foreach (range(1, 24) as $day) {
-        if (null !== $dayData = printDay($day)) {
-            $informationArray[] = $dayData;
-        }
+$options = getopt('d::y::');
+$days = array_key_exists('d', $options) ? [(int)$options['d']] : range(1, 25);
+$year = array_key_exists('y', $options) ? (int)$options['y'] : (int)date('Y');
+
+foreach ($days as $day) {
+    $dayData = printDay($day, $year);
+    if (null !== $dayData) {
+        $informationArray[] = $dayData;
     }
 }
 
-function printDay(int $day): array|null
+function printDay(int $day, int $year = 2021): array|null
 {
-    $class = sprintf('MueR\\AdventOfCode2021\\Day%02d\\Day%02d', $day, $day);
+    $class = sprintf('MueR\\AdventOfCode\\AdventOfCode%04d\\Day%02d\\Day%02d', $year, $day, $day);
     $dayString = sprintf('%02d', $day);
 
     if (!class_exists($class)) {
@@ -67,6 +67,7 @@ function printDay(int $day): array|null
     ];
 }
 
+printf("|%'-27s Advent Of Code %4d %'-26s|\n", '', $year, '');
 printf("| Day | %-20s | %-20s | %-20s |\n", 'Solution 1', 'Solution 2', 'Diagnostics');
 printf("|-----|%1\$s|%1\$s|%1\$s|\n", str_repeat('-', 22));
 foreach ($informationArray as $information) {
@@ -80,3 +81,4 @@ foreach ($informationArray as $information) {
 
     );
 }
+printf("|-----|%1\$s|%1\$s|%1\$s|\n", str_repeat('-', 22));

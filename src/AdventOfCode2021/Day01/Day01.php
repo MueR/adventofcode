@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MueR\AdventOfCode2021\Day01;
+namespace MueR\AdventOfCode\AdventOfCode2021\Day01;
 
 use JetBrains\PhpStorm\Pure;
-use MueR\AdventOfCode2021\AbstractSolver;
+use MueR\AdventOfCode\AbstractSolver;
 
 class Day01 extends AbstractSolver
 {
@@ -36,6 +36,7 @@ class Day01 extends AbstractSolver
                 $result++;
             }
         }
+
         return $result;
     }
 }

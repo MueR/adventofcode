@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "MueR\\AdventOfCode2021\\": "src/"
+            "MueR\\AdventOfCode\\": "src/"
         }
     },
     "require-dev": {

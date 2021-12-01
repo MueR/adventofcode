@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MueR\AdventOfCode2021;
+namespace MueR\AdventOfCode;
 
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
@@ -16,7 +16,7 @@ abstract class AbstractSolver
 
     public function __construct()
     {
-        $this->ns = substr(substr(get_class($this), 0, strrpos(get_class($this), '\\')), -5);
+        $this->ns = str_replace('\\', '/', substr(get_class($this), strlen('MueR\\AdventOfCode\\'), -5));
         $this->day = (int)substr($this->ns, -2);
         $this->stopwatch = new Stopwatch(true);
         $this->stopwatch->start($this->ns);
