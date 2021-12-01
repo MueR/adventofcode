@@ -8,8 +8,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,14 +36,13 @@ class SolveCommand extends Command
                 name: 'day',
                 shortcut: 'd',
                 mode: InputOption::VALUE_REQUIRED,
-                default: range(1, 25)
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->year = (int)$input->getOption('year');
-        $this->days = $input->getOption('day');
+        $this->days = $input->getOption('day') ? [(int)$input->getOption('day')] : range(1, 25);
 
         $formatter = $this->getHelper('formatter');
         $header = $formatter->formatBlock([
