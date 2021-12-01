@@ -7,16 +7,15 @@ namespace MueR\AdventOfCode\AdventOfCode2021\Day01;
 use JetBrains\PhpStorm\Pure;
 use MueR\AdventOfCode\AbstractSolver;
 
+/**
+ * Day 1 puzzle.
+ *
+ * @property array{int} $input
+ */
 class Day01 extends AbstractSolver
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->readTextInput();
-    }
-
-    #[Pure] public function partOne(): int
+    #[Pure]
+    public function partOne(): int
     {
         $result = 0;
         for ($i = 0, $m = count($this->input) - 1; $i < $m; $i++) {
@@ -26,7 +25,8 @@ class Day01 extends AbstractSolver
         return $result;
     }
 
-    #[Pure] public function partTwo(): int
+    #[Pure]
+    public function partTwo(): int
     {
         $result = 0;
         for ($i = 0, $m = count($this->input) - 3; $i < $m; $i++) {

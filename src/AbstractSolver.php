@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode;
 
+use InvalidArgumentException;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
 abstract class AbstractSolver
 {
+    protected const INPUT_MODE_PHP = 'php';
+    protected const INPUT_MODE_TEXT = 'text';
+
     private Stopwatch $stopwatch;
+    protected string $inputMode = self::INPUT_MODE_TEXT;
     protected string|array $input;
     private string $ns;
     public int $day;
@@ -20,6 +25,12 @@ abstract class AbstractSolver
         $this->day = (int)substr($this->ns, -2);
         $this->stopwatch = new Stopwatch(true);
         $this->stopwatch->start($this->ns);
+
+        $this->input = match ($this->inputMode) {
+            self::INPUT_MODE_PHP => $this->readPhpInput(),
+            self::INPUT_MODE_TEXT => $this->readTextInput(),
+            default => throw new InvalidArgumentException('Invalid input mode.'),
+        };
     }
 
     abstract public function partOne(): int;
@@ -35,15 +46,15 @@ abstract class AbstractSolver
         return $this->stopwatch->stop($this->ns);
     }
 
-    protected function readInput(): void
+    protected function readPhpInput()
     {
-        $this->input = require __DIR__ . '/' .$this->ns . '/input.php';
+        return require __DIR__ . '/' .$this->ns . '/input.php';
     }
 
-    protected function readTextInput(): void
+    protected function readTextInput(): array
     {
         $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.txt');
 
-        $this->input = explode(PHP_EOL, $content);
+        return explode(PHP_EOL, $content);
     }
 }
