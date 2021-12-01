@@ -53,7 +53,11 @@ class SolveCommand extends Command
             sprintf('%30s%s%29s', ' ', 'Advent of Code ' . $this->year, ''),
             ''
         ], 'bg=green;options=bold');
-        $output->writeln($header);
+        $output->write([
+            "\n",
+            $header,
+            "\n\n",
+        ]);
 
         $this->table = new Table($output);
         $this->table
@@ -70,6 +74,8 @@ class SolveCommand extends Command
         }
 
         $this->table->render();
+
+        $output->writeln('');
 
         return Command::SUCCESS;
     }
