@@ -17,9 +17,8 @@ class Day01 extends AbstractSolver
     #[Pure]
     public function partOne(): int
     {
-        $result = 0;
-        for ($i = 0, $m = count($this->input) - 1; $i < $m; $i++) {
-            $result += $this->input[$i] < $this->input[$i + 1] ? 1 : 0;
+        for ($result = 0, $i = 0, $m = count($this->input) - 1; $i < $m; $i++) {
+            $result += (int) ($this->input[$i] < $this->input[$i + 1]);
         }
 
         return $result;
@@ -28,11 +27,10 @@ class Day01 extends AbstractSolver
     #[Pure]
     public function partTwo(): int
     {
-        $result = 0;
-        for ($i = 0, $m = count($this->input) - 3; $i < $m; $i++) {
-            $one = array_sum(array_slice($this->input, $i, 3));
-            $two = array_sum(array_slice($this->input, $i + 1, 3));
-            if ($one < $two) {
+        for ($result = 0, $i = 0, $m = count($this->input) - 3; $i < $m; $i++) {
+            $current = array_sum(array_slice($this->input, $i, 3));
+            $next = array_sum(array_slice($this->input, $i + 1, 3));
+            if ($current < $next) {
                 $result++;
             }
         }
