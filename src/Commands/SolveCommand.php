@@ -64,7 +64,7 @@ class SolveCommand extends Command
 
         foreach ($this->days as $day) {
             try {
-                $this->solve($day);
+                $this->solve($day, $output);
             } catch (\RuntimeException $e) {
                 // Skip.
             }
@@ -77,13 +77,15 @@ class SolveCommand extends Command
         return Command::SUCCESS;
     }
 
-    public function solve(int $day): void
+    public function solve(int $day, OutputInterface $output): void
     {
-        $class = sprintf('MueR\\AdventOfCode\\AdventOfCode%04d\\Day%02d\\Day%02d', $this->year, $day, $day);
+        $class = sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $this->year, $day, $day);
 
         if (!class_exists($class)) {
             return;
         }
+
+        $partOneSolution = $partTwoSolution = null;
 
         try {
             /** @var AbstractSolver $instance */
@@ -99,15 +101,17 @@ class SolveCommand extends Command
             $partOneSolution = $instance->partOne();
             $instance->lap();
         } catch (\RuntimeException $e) {
-            $partOneSolution = 'Skipped part 1 because "' . $e->getMessage() . '"';
-            echo $partOneSolution . PHP_EOL;
+            $output->writeln('<error>Skipped part 1: ' . $e->getMessage() . '</error>');
         }
 
         try {
             $partTwoSolution = $instance->partTwo();
         } catch (\RuntimeException $e) {
-            $partTwoSolution = 'Skipped part 2 because "' . $e->getMessage() . '"';
-            echo $partTwoSolution . PHP_EOL;
+            $output->writeln('<error>Skipped part 2: ' . $e->getMessage() . '</error>');
+        }
+
+        if (($partOneSolution === null || $partOneSolution === -1) && ($partTwoSolution === null || $partTwoSolution === -1)) {
+            return;
         }
 
         $stopwatchData = $instance->stop();

@@ -48,11 +48,19 @@ abstract class AbstractSolver
 
     protected function readPhpInput()
     {
+        if (!file_exists(__DIR__ . '/' .$this->ns . '/input.php')) {
+            return [];
+        }
+
         return require __DIR__ . '/' .$this->ns . '/input.php';
     }
 
     protected function readTextInput(): array
     {
+        if (!file_exists(__DIR__ . '/' .$this->ns . '/input.txt')) {
+            return [];
+        }
+
         $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.txt');
 
         return explode(PHP_EOL, $content);
