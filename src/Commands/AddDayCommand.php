@@ -26,24 +26,30 @@ class AddDayCommand extends Command
                 name: 'day',
                 shortcut: 'd',
                 mode: InputOption::VALUE_REQUIRED,
+            )
+            ->addOption(
+                name: 'year',
+                shortcut: 'y',
+                mode: InputOption::VALUE_REQUIRED,
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $day = $input->getOption('day');
+        $year = $input->getOption('year');
         if ($day < 1 || $day > 25) {
             $output->writeln(sprintf('<error>Expected a positive integer in the range of 1 to 25, got %d.</error>', $day));
 
             return Command::FAILURE;
         }
 
-        $year = (int)date('Y');
+        $year = $year ?? (int)date('Y');
         $class = sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $year, $day, $day);
 
         $generator = new ClassGenerator();
         $generator
-            ->setName(substr($class, strrpos($class, '\\')))
+            ->setName(substr($class, strrpos($class, '\\') + 1))
             ->setExtendedClass('AbstractSolver');
 
         foreach (['partOne', 'partTwo'] as $methodName) {
@@ -64,7 +70,10 @@ class AddDayCommand extends Command
             ->setUses([AbstractSolver::class]);
 
         $filename = dirname(__DIR__) . '/' . str_replace('\\', '/', substr($class, strlen('MueR\\AdventOfCode\\'))) . '.php';
-        file_put_contents($filename, $fileGenerator->generate());
+        if (!file_exists($filename)) {
+            file_put_contents($filename, $fileGenerator->generate());
+        }
+        $output->writeln('<fg=green>✔</> Class ' . $filename . ' created!');
 
         return Command::SUCCESS;
     }
