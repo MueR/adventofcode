@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MueR\AdventOfCode;
+namespace MueR\AdventOfCode2021;
 
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
@@ -17,14 +17,12 @@ abstract class AbstractSolver
     public function __construct()
     {
         $this->ns = substr(substr(get_class($this), 0, strrpos(get_class($this), '\\')), -5);
-        $this->day = (int) substr($this->ns, -2);
+        $this->day = (int)substr($this->ns, -2);
         $this->stopwatch = new Stopwatch(true);
         $this->stopwatch->start($this->ns);
-        $this->readInput();
     }
 
     abstract public function partOne(): int;
-
     abstract public function partTwo(): int;
 
     public function lap(): StopwatchEvent
@@ -39,6 +37,13 @@ abstract class AbstractSolver
 
     protected function readInput(): void
     {
-        $this->input = require __DIR__ . '/' . $this->ns . '/input.php';
+        $this->input = require __DIR__ . '/' .$this->ns . '/input.php';
+    }
+
+    protected function readTextInput(): void
+    {
+        $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.php');
+
+        $this->input = explode(PHP_EOL, $content);
     }
 }
