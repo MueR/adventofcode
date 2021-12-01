@@ -90,15 +90,9 @@ class SolveCommand extends Command
 
         $partOneSolution = $partTwoSolution = null;
 
-        try {
-            /** @var AbstractSolver $instance */
-            $instance = new $class();
-            $instance->lap();
-        } catch (\RuntimeException $e) {
-            echo 'Skipped day because "' . $e->getMessage() . '"' . PHP_EOL;
-
-            return;
-        }
+        /** @var AbstractSolver $instance */
+        $instance = new $class();
+        $instance->lap();
 
         try {
             $partOneSolution = $instance->partOne();
