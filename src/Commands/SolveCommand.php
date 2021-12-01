@@ -66,7 +66,10 @@ class SolveCommand extends Command
             try {
                 $this->solve($day, $output);
             } catch (\RuntimeException $e) {
-                // Skip.
+                $output->write($formatter->formatBlock([
+                    sprintf('RuntimeException for day %d:', $day),
+                    $e->getMessage(),
+                ], 'bg=red;options=bold'));
             }
         }
 
