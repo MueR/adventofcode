@@ -42,7 +42,7 @@ abstract class AbstractSolver
 
     protected function readTextInput(): void
     {
-        $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.php');
+        $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.txt');
 
         $this->input = explode(PHP_EOL, $content);
     }
