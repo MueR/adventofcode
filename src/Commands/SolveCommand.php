@@ -67,9 +67,9 @@ class SolveCommand extends Command
                 $this->solve($day, $output);
             } catch (\RuntimeException $e) {
                 $output->write($formatter->formatBlock([
-                    sprintf('RuntimeException for day %d:', $day),
+                    sprintf('RuntimeException for day %d on line %d:', $day, $e->getLine()),
                     $e->getMessage(),
-                ], 'bg=red;options=bold'));
+                ], 'bg=red;options=bold') . "\n\n");
             }
         }
 
@@ -94,24 +94,15 @@ class SolveCommand extends Command
         $instance = new $class();
         $instance->lap();
 
-        try {
-            $partOneSolution = $instance->partOne();
-            $instance->lap();
-        } catch (\RuntimeException $e) {
-            $output->writeln('<error>Skipped part 1: ' . $e->getMessage() . '</error>');
-        }
-
-        try {
-            $partTwoSolution = $instance->partTwo();
-        } catch (\RuntimeException $e) {
-            $output->writeln('<error>Skipped part 2: ' . $e->getMessage() . '</error>');
-        }
+        $partOneSolution = $instance->partOne();
+        $instance->lap();
+        $partTwoSolution = $instance->partTwo();
+        $stopwatchData = $instance->stop();
 
         if (($partOneSolution === null || $partOneSolution === -1) && ($partTwoSolution === null || $partTwoSolution === -1)) {
             return;
         }
 
-        $stopwatchData = $instance->stop();
         $this->table->addRow([
             new TableCell(
                 $day,
