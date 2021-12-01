@@ -10,4 +10,5 @@ bin/console solve solve [-y|--year YEAR] [-d|--day DAY]
 Option      Default         Description
 --year      current year    Run year X.
 --day       all days        Run day X, default value is all days.
+                            Note: only days that return actual values will be displayed.
 ```
