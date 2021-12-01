@@ -2,12 +2,12 @@
 
 ## Usage
 ```shell
-php run.php [-y2021] [-d1]
+bin/console solve solve [-y|--year YEAR] [-d|--day DAY]
 ```
 
 ### Optional command line parameters
 ```text
 Option      Default         Description
--y[value]   current year    Run year X.
--d[value]   all days        Run day X, default value is all days.
+--year      current year    Run year X.
+--day       all days        Run day X, default value is all days.
 ```
