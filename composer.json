@@ -19,6 +19,7 @@
     }
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest"
+    "roave/security-advisories": "dev-latest",
+    "jetbrains/phpstorm-attributes": "^1.0"
   }
 }
