@@ -9,6 +9,9 @@ use MueR\AdventOfCode\AbstractSolver;
 
 class Day02 extends AbstractSolver
 {
+    /**
+     * Aim is actually the depth in part one.
+     */
     private int $aim = 0;
     private int $depth = 0;
     private int $position = 0;
