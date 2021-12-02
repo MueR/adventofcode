@@ -31,9 +31,6 @@ class Day02 extends AbstractSolver
     private function navigate(): void
     {
         foreach ($this->input as $line) {
-            if ($line === '') {
-                continue;
-            }
             preg_match('/^(?<direction>up|down|forward) (?<units>\d+)$/im', $line, $instruction);
             switch ($instruction['direction']) {
                 case 'forward':

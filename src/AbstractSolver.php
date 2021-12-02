@@ -63,6 +63,6 @@ abstract class AbstractSolver
 
         $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.txt');
 
-        return explode(PHP_EOL, $content);
+        return explode(PHP_EOL, trim($content));
     }
 }
