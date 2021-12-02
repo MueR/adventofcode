@@ -5,6 +5,7 @@ namespace MueR\AdventOfCode\Commands;
 use Laminas\Code\DeclareStatement;
 use Laminas\Code\Generator\AbstractMemberGenerator;
 use Laminas\Code\Generator\ClassGenerator;
+use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Generator\FileGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use MueR\AdventOfCode\AbstractSolver;
@@ -51,6 +52,13 @@ class AddDayCommand extends Command
         $generator
             ->setName(substr($class, strrpos($class, '\\') + 1))
             ->setExtendedClass('AbstractSolver');
+
+        $docBlock = new DocBlockGenerator("Day $day puzzle.");
+        $docBlock->setTag([
+            'name' => 'property',
+            'description' => 'array{int} $input',
+        ]);
+        $generator->setDocBlock($docBlock);
 
         foreach (['partOne', 'partTwo'] as $methodName) {
             $method = new MethodGenerator();
