@@ -80,8 +80,14 @@ class AddDayCommand extends Command
         $filename = dirname(__DIR__) . '/' . str_replace('\\', '/', substr($class, strlen('MueR\\AdventOfCode\\'))) . '.php';
         if (!file_exists($filename)) {
             file_put_contents($filename, $fileGenerator->generate());
+            $output->writeln('<fg=green>✔</> Class ' . $filename . ' created!');
+        } else {
+            $output->writeln('<fg=green>✔</> Class ' . $filename . ' already present, leaving it alone.');
         }
-        $output->writeln('<fg=green>✔</> Class ' . $filename . ' created!');
+        $inputName = substr($filename, 0, -9) . 'input.txt';
+        if (!file_exists($inputName)) {
+            touch($inputName);
+        }
 
         return Command::SUCCESS;
     }
