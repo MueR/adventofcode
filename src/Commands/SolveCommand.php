@@ -36,7 +36,13 @@ class SolveCommand extends Command
                 name: 'day',
                 shortcut: 'd',
                 mode: InputOption::VALUE_REQUIRED,
-            );
+            )
+            ->addOption(
+                name: 'test',
+                shortcut: 't',
+                mode: InputOption::VALUE_NONE,
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -64,10 +70,10 @@ class SolveCommand extends Command
 
         foreach ($this->days as $day) {
             try {
-                $this->solve($day, $output);
-            } catch (\RuntimeException $e) {
+                $this->solve($day, $output, (bool) $input->getOption('test'));
+            } catch (\Exception | \Error $e) {
                 $output->write($formatter->formatBlock([
-                    sprintf('RuntimeException for day %d on line %d:', $day, $e->getLine()),
+                    sprintf('[%s] in day %d on line %d:', get_class($e), $day, $e->getLine()),
                     $e->getMessage(),
                 ], 'bg=red;options=bold') . "\n\n");
             }
@@ -80,7 +86,7 @@ class SolveCommand extends Command
         return Command::SUCCESS;
     }
 
-    public function solve(int $day, OutputInterface $output): void
+    public function solve(int $day, OutputInterface $output, bool $test = false): void
     {
         $class = sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $this->year, $day, $day);
 
@@ -88,18 +94,22 @@ class SolveCommand extends Command
             return;
         }
 
-        $partOneSolution = $partTwoSolution = null;
-
         /** @var AbstractSolver $instance */
         $instance = new $class();
         $instance->lap();
 
+        if ($test) {
+            $instance->setTestmode(true);
+        }
+
         $partOneSolution = $instance->partOne();
         $instance->lap();
         $partTwoSolution = $instance->partTwo();
+        $instance->lap();
+
         $stopwatchData = $instance->stop();
 
-        if (($partOneSolution === null || $partOneSolution === -1) && ($partTwoSolution === null || $partTwoSolution === -1)) {
+        if ($partOneSolution === -1 || $partTwoSolution === -1) {
             return;
         }
 

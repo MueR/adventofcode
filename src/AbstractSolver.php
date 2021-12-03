@@ -16,6 +16,8 @@ abstract class AbstractSolver
     private Stopwatch $stopwatch;
     protected string $inputMode = self::INPUT_MODE_TEXT;
     protected string|array $input;
+    protected bool $test = false;
+    protected array $testInput = [];
     private string $ns;
     public int $day;
 
@@ -31,6 +33,16 @@ abstract class AbstractSolver
             self::INPUT_MODE_TEXT => $this->readTextInput(),
             default => throw new InvalidArgumentException('Invalid input mode.'),
         };
+    }
+
+    public function testOne(): int
+    {
+        return -1;
+    }
+
+    public function testTwo(): int
+    {
+        return -1;
     }
 
     abstract public function partOne(): int;
@@ -64,5 +76,15 @@ abstract class AbstractSolver
         $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.txt');
 
         return explode(PHP_EOL, trim($content));
+    }
+
+    public function setTestmode(bool $testMode): self
+    {
+        $this->test = $testMode;
+        if ($testMode) {
+            $this->input = $this->testInput;
+        }
+
+        return $this;
     }
 }
