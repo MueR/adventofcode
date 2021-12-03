@@ -5,18 +5,35 @@ declare(strict_types=1);
 namespace MueR\AdventOfCode\AdventOfCode2021\Day03;
 
 use MueR\AdventOfCode\AbstractSolver;
-use RuntimeException;
 
+/**
+ * Day 3 puzzle.
+ *
+ * @property array{int} $input
+ */
 class Day03 extends AbstractSolver
 {
-    protected array $testInput = ['00100', '11110', '10110', '10111', '10101', '01111', '00111', '11100', '10000', '11001', '00010', '01010'];
+    protected array $testInput = [
+        '00100',
+        '11110',
+        '10110',
+        '10111',
+        '10101',
+        '01111',
+        '00111',
+        '11100',
+        '10000',
+        '11001',
+        '00010',
+        '01010'
+    ];
 
-    public function partOne(): int
+    public function partOne() : int
     {
         $gamma = $epsilon = '';
-        for ($i = 0, $l = strlen($this->input[0]); $i < $l; $i++) {
+        for ($i = 0, $l = strlen($this->getInput(0)); $i < $l; $i++) {
             $values = [0 => 0, 1 => 0];
-            foreach ($this->input as $bit) {
+            foreach ($this->getInput() as $bit) {
                 $values[((int)$bit[$i])]++;
             }
             $gamma .= $values[0] > $values[1] ? 0 : 1;
@@ -25,15 +42,15 @@ class Day03 extends AbstractSolver
         return bindec($gamma) * bindec($epsilon);
     }
 
-    public function partTwo(): int
+    public function partTwo() : int
     {
-        $oxygen = $this->findValue($this->input, true);
+        $oxygen = $this->findValue($this->getInput(), true);
         $co2 = $this->findValue($this->input, false);
 
         return bindec($oxygen) * bindec($co2);
     }
 
-    public function findValue(array $input, bool $mostCommon): ?string
+    public function findValue(array $input, bool $mostCommon) : ?string
     {
         for ($i = 0, $l = strlen($input[0]); $i < $l; $i++) {
             $input = $this->reduce($input, $i, $mostCommon);
@@ -42,10 +59,10 @@ class Day03 extends AbstractSolver
             }
         }
 
-        throw new RuntimeException('No valid combination found.');
+        throw new \RuntimeException('No valid combination found.');
     }
 
-    public function reduce(array $input, int $position, bool $mostCommon): array
+    public function reduce(array $input, int $position, bool $mostCommon) : array
     {
         $search = $mostCommon ? '1' : '0';
         $matching = 2 * count(array_filter($input, static fn ($line) => $line[$position] === $search));

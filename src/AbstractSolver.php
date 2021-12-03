@@ -16,8 +16,8 @@ abstract class AbstractSolver
     private Stopwatch $stopwatch;
     protected string $inputMode = self::INPUT_MODE_TEXT;
     protected string|array $input;
+    protected array $testInput;
     protected bool $test = false;
-    protected array $testInput = [];
     private string $ns;
     public int $day;
 
@@ -35,16 +35,6 @@ abstract class AbstractSolver
         };
     }
 
-    public function testOne(): int
-    {
-        return -1;
-    }
-
-    public function testTwo(): int
-    {
-        return -1;
-    }
-
     abstract public function partOne(): int;
     abstract public function partTwo(): int;
 
@@ -56,6 +46,22 @@ abstract class AbstractSolver
     public function stop(): StopwatchEvent
     {
         return $this->stopwatch->stop($this->ns);
+    }
+
+    public function setTestmode(bool $testMode): self
+    {
+        $this->test = $testMode;
+
+        return $this;
+    }
+
+    final protected function getInput(?int $index = null): array|string|int
+    {
+        if ($index !== null) {
+            return $this->test ? $this->testInput[$index] : $this->input[$index];
+        }
+
+        return $this->test ? $this->testInput : $this->input;
     }
 
     protected function readPhpInput()
@@ -76,15 +82,5 @@ abstract class AbstractSolver
         $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.txt');
 
         return explode(PHP_EOL, trim($content));
-    }
-
-    public function setTestmode(bool $testMode): self
-    {
-        $this->test = $testMode;
-        if ($testMode) {
-            $this->input = $this->testInput;
-        }
-
-        return $this;
     }
 }

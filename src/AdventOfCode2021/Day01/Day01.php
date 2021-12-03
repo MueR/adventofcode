@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode\AdventOfCode2021\Day01;
 
-use JetBrains\PhpStorm\Pure;
 use MueR\AdventOfCode\AbstractSolver;
 
 /**
@@ -14,22 +13,22 @@ use MueR\AdventOfCode\AbstractSolver;
  */
 class Day01 extends AbstractSolver
 {
-    #[Pure]
-    public function partOne(): int
+    protected array $testInput = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
+
+    public function partOne() : int
     {
-        for ($result = 0, $i = 0, $m = count($this->input) - 1; $i < $m; $i++) {
-            $result += (int) ($this->input[$i] < $this->input[$i + 1]);
+        for ($result = 0, $i = 0, $m = count($this->getInput()) - 1; $i < $m; $i++) {
+            $result += (int) ($this->getInput($i) < $this->getInput($i + 1));
         }
 
         return $result;
     }
 
-    #[Pure]
-    public function partTwo(): int
+    public function partTwo() : int
     {
-        for ($result = 0, $i = 0, $m = count($this->input) - 3; $i < $m; $i++) {
-            $current = array_sum(array_slice($this->input, $i, 3));
-            $next = array_sum(array_slice($this->input, $i + 1, 3));
+        for ($result = 0, $i = 0, $m = count($this->getInput()) - 3; $i < $m; $i++) {
+            $current = array_sum(array_slice($this->getInput(), $i, 3));
+            $next = array_sum(array_slice($this->getInput(), $i + 1, 3));
             if ($current < $next) {
                 $result++;
             }

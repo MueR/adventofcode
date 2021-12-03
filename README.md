@@ -2,12 +2,13 @@
 
 ## Usage
 ```shell
-bin/console solve solve [-y|--year YEAR] [-d|--day DAY]
+bin/console solve solve [-y|--year YEAR] [-d|--day DAY] [-t|--test]
 ```
 
 ### Optional command line parameters
 ```text
 Option      Default         Description
+--test      false           Run your code against test values, rather than your puzzle input.
 --year      current year    Run year X.
 --day       all days        Run day X, default value is all days.
                             Note: only days that return actual values will be displayed.

@@ -2,13 +2,7 @@
 
 namespace MueR\AdventOfCode\Commands;
 
-use Laminas\Code\DeclareStatement;
-use Laminas\Code\Generator\AbstractMemberGenerator;
-use Laminas\Code\Generator\ClassGenerator;
-use Laminas\Code\Generator\FileGenerator;
-use Laminas\Code\Generator\MethodGenerator;
-use MueR\AdventOfCode\AbstractSolver;
-use MueR\AdventOfCode\AdventOfCode;
+use InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,9 +29,11 @@ class AddYearCommand extends Command
         $year = (int)$input->getOption('year');
         $srcPath = dirname(__DIR__);
 
+        if ($year < 2015) {
+            throw new InvalidArgumentException('Year must be 2015 or higher.');
+        }
+
         $addDayCommand = $this->getApplication()->find('add:day');
-
-
         for ($i = 1; $i < 26; $i++) {
             $directory = sprintf('%s/AdventOfCode%4d/Day%02d', $srcPath, $year, $i);
             if (!@mkdir($directory, 0777, true) && !is_dir($directory)) {

@@ -8,8 +8,12 @@ use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Generator\FileGenerator;
 use Laminas\Code\Generator\MethodGenerator;
+use Laminas\Code\Generator\PropertyGenerator;
+use Laminas\Code\Reflection\ClassReflection;
 use MueR\AdventOfCode\AbstractSolver;
 use MueR\AdventOfCode\AdventOfCode;
+use MueR\AdventOfCode\Generators\TypedPropertyGenerator;
+use ReflectionClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,7 +36,8 @@ class AddDayCommand extends Command
                 name: 'year',
                 shortcut: 'y',
                 mode: InputOption::VALUE_REQUIRED,
-            );
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -48,10 +53,27 @@ class AddDayCommand extends Command
         $year = $year ?? (int)date('Y');
         $class = sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $year, $day, $day);
 
+        if (class_exists($class)) {
+            $output->writeln('Class ' . $class . ' already exists, skipping');
+            return Command::SUCCESS;
+        }
+
         $generator = new ClassGenerator();
         $generator
             ->setName(substr($class, strrpos($class, '\\') + 1))
-            ->setExtendedClass('AbstractSolver');
+            ->setExtendedClass('AbstractSolver')
+            ->removeConstant('INPUT_MODE_PHP')
+            ->removeConstant('INPUT_MODE_TEXT')
+        ;
+
+        if (!$generator->hasProperty('testInput')) {
+            $prop = new TypedPropertyGenerator();
+            $prop
+                ->setName('testInput')
+                ->setDefaultValue([])
+                ->setFlags(PropertyGenerator::FLAG_PROTECTED)
+            ;
+        }
 
         $docBlock = new DocBlockGenerator("Day $day puzzle.");
         $docBlock->setTag([
@@ -61,12 +83,16 @@ class AddDayCommand extends Command
         $generator->setDocBlock($docBlock);
 
         foreach (['partOne', 'partTwo'] as $methodName) {
+            if ($generator->hasMethod($methodName)) {
+                continue;
+            }
             $method = new MethodGenerator();
             $method
                 ->setName($methodName)
                 ->setReturnType('int')
                 ->setVisibility(AbstractMemberGenerator::VISIBILITY_PUBLIC)
-                ->setBody('return -1;');
+                ->setBody('return -1;')
+            ;
             $generator->addMethods([$method]);
         }
 
@@ -75,15 +101,16 @@ class AddDayCommand extends Command
             ->setDeclares([DeclareStatement::strictTypes(1)])
             ->setClass($generator)
             ->setNamespace(substr($class, 0, strrpos($class, '\\')))
-            ->setUses([AbstractSolver::class]);
+            ->setUses([AbstractSolver::class])
+        ;
+
+        $fileContent = $fileGenerator->generate();
+        // Sadly, we must do this, since laminas-code does not generate property types.
+        //$fileContent = preg_replace('/protected (array )?\$testInput = \[[\s]+];/', 'protected array $testInput = [];', $fileContent);
 
         $filename = dirname(__DIR__) . '/' . str_replace('\\', '/', substr($class, strlen('MueR\\AdventOfCode\\'))) . '.php';
-        if (!file_exists($filename)) {
-            file_put_contents($filename, $fileGenerator->generate());
-            $output->writeln('<fg=green>✔</> Class ' . $filename . ' created!');
-        } else {
-            $output->writeln('<fg=green>✔</> Class ' . $filename . ' already present, leaving it alone.');
-        }
+        file_put_contents($filename, $fileContent);
+        $output->writeln(sprintf('<fg=green>✔</> Class %s created.', $filename));
         $inputName = substr($filename, 0, -9) . 'input.txt';
         if (!file_exists($inputName)) {
             touch($inputName);
