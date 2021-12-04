@@ -37,43 +37,30 @@ class Day04 extends AbstractSolver
 
     public function partTwo(): int
     {
-        return -1;
-    }
-
-    protected function showCard(int $card): void
-    {
-        $t = 0;
-        foreach ($this->cards[$card] as $line) {
-            $r = 0;
-            foreach ($line as $n) {
-                printf('%4d ', $n);
-                if ($n >= 0) {
-                    $r += $n;
+        $winners = [];
+        $totalCards = count($this->cards);
+        foreach ($this->numbers as $number) {
+            foreach ($this->cards as $card => $content) {
+                if ($this->markNumber($card, $number) && !in_array($card, $winners, true)) {
+                    $winners[] = $card;
+                }
+                if (count($winners) === $totalCards) {
+                    return $number * $this->getRemainingNumberScore($card);
                 }
             }
-            printf(' :: Remaining %d', $r);
-            $t += $r;
-            print "\n";
         }
-        print 'Card total: ' . $t;
-        print "\n";
+
+        return -1;
     }
 
     protected function markNumber(int $card, int $numberDrawn): bool
     {
-        foreach ($this->cards as $lines) {
-            foreach ($lines as $row => $line) {
-                foreach ($line as $col => $number) {
-                    if ($number === $numberDrawn) {
-                        $this->cards[$card][$row][$col] = $numberDrawn === 0 ? -100 : -$number;
+        foreach ($this->cards[$card] as $row => $line) {
+            foreach ($line as $col => $number) {
+                if ($this->cards[$card][$row][$col] === $numberDrawn) {
+                    $this->cards[$card][$row][$col] = $numberDrawn === 0 ? -100 : -$number;
 
-                        $bingo = $this->checkBingo($this->cards[$card], $row, $col);
-                        if ($bingo) {
-                            printf("BINGO Card %d Num %d\n\n", $card + 1, $number);
-                            $this->showCard($card);
-                        }
-                        return $bingo;
-                    }
+                    return $this->checkBingo($this->cards[$card], $row, $col);
                 }
             }
         }
