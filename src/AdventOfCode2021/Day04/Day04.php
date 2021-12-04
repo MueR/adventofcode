@@ -42,12 +42,20 @@ class Day04 extends AbstractSolver
 
     protected function showCard(int $card): void
     {
+        $t = 0;
         foreach ($this->cards[$card] as $line) {
+            $r = 0;
             foreach ($line as $n) {
                 printf('%4d ', $n);
+                if ($n >= 0) {
+                    $r += $n;
+                }
             }
+            printf(' :: Remaining %d', $r);
+            $t += $r;
             print "\n";
         }
+        print 'Card total: ' . $t;
         print "\n";
     }
 
