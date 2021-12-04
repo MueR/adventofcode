@@ -12,11 +12,7 @@ use Symfony\Component\Stopwatch\StopwatchEvent;
 
 abstract class AbstractSolver
 {
-    protected const INPUT_MODE_PHP = 'php';
-    protected const INPUT_MODE_TEXT = 'text';
-
     private Stopwatch $stopwatch;
-    protected string $inputMode = self::INPUT_MODE_TEXT;
     protected string|array $input;
     protected array $testInput;
     private string $ns;
@@ -29,11 +25,7 @@ abstract class AbstractSolver
         $this->stopwatch = new Stopwatch(true);
         $this->stopwatch->start($this->ns);
 
-        $this->input = match ($this->inputMode) {
-            self::INPUT_MODE_PHP => $this->readPhpInput(),
-            self::INPUT_MODE_TEXT => $this->readTextInput(),
-            default => throw new InvalidArgumentException('Invalid input mode.'),
-        };
+        $this->parse();
     }
 
     abstract public function partOne(): int;
@@ -75,10 +67,9 @@ abstract class AbstractSolver
         return require $file;
     }
 
-    #[Pure]
-    protected function readTextInput(): array
+    protected function parse(): void
     {
-        return explode(PHP_EOL, $this->readText());
+        $this->input = explode(PHP_EOL, $this->readText());
     }
 
     protected function readText(): string

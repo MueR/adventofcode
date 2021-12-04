@@ -88,7 +88,7 @@ class Day04 extends AbstractSolver
         return empty(array_filter($card, static fn (array $line) => $line[$col] >= 0));
     }
 
-    protected function readTextInput(): array
+    protected function parse(): void
     {
         $this->cards = [];
         $this->numbers = [];
@@ -107,7 +107,5 @@ class Day04 extends AbstractSolver
                 }
             }
         }
-
-        return $this->numbers;
     }
 }
