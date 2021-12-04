@@ -62,6 +62,10 @@ class SolveCommand extends Command
             "\n\n",
         ]);
 
+        if ((bool) $input->getOption('test')) {
+            $output->writeln('Using test input.');
+        }
+
         $this->table = new Table($output);
         $this->table
             ->setStyle('box-double')
@@ -73,7 +77,7 @@ class SolveCommand extends Command
                 $this->solve($day, $output, (bool) $input->getOption('test'));
             } catch (\Exception | \Error $e) {
                 $output->write($formatter->formatBlock([
-                    sprintf('[%s] in day %d on line %d:', get_class($e), $day, $e->getLine()),
+                    sprintf('[%s] in %s on line %d:', get_class($e), sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $this->year, $day, $day), $e->getLine()),
                     $e->getMessage(),
                 ], 'bg=red;options=bold') . "\n\n");
             }
@@ -95,12 +99,8 @@ class SolveCommand extends Command
         }
 
         /** @var AbstractSolver $instance */
-        $instance = new $class();
+        $instance = new $class($test);
         $instance->lap();
-
-        if ($test) {
-            $instance->setTestmode(true);
-        }
 
         $partOneSolution = $instance->partOne();
         $instance->lap();
@@ -109,7 +109,7 @@ class SolveCommand extends Command
 
         $stopwatchData = $instance->stop();
 
-        if ($partOneSolution === -1 || $partTwoSolution === -1) {
+        if ($partOneSolution === -1 && $partTwoSolution === -1) {
             return;
         }
 

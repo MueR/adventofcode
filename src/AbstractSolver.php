@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MueR\AdventOfCode;
 
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
@@ -17,11 +18,10 @@ abstract class AbstractSolver
     protected string $inputMode = self::INPUT_MODE_TEXT;
     protected string|array $input;
     protected array $testInput;
-    protected bool $test = false;
     private string $ns;
     public int $day;
 
-    public function __construct()
+    public function __construct(protected bool $test = false)
     {
         $this->ns = str_replace('\\', '/', substr(get_class($this), strlen('MueR\\AdventOfCode\\'), -5));
         $this->day = (int)substr($this->ns, -2);
@@ -73,14 +73,20 @@ abstract class AbstractSolver
         return require __DIR__ . '/' .$this->ns . '/input.php';
     }
 
+    #[Pure]
     protected function readTextInput(): array
     {
+        return explode(PHP_EOL, $this->readText());
+    }
+
+    protected function readText(): string
+    {
         if (!file_exists(__DIR__ . '/' .$this->ns . '/input.txt')) {
-            return [];
+            return '';
         }
 
         $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.txt');
 
-        return explode(PHP_EOL, trim($content));
+        return trim($content);
     }
 }
