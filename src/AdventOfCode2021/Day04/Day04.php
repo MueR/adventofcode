@@ -40,7 +40,7 @@ class Day04 extends AbstractSolver
         return -1;
     }
 
-    protected function showCard(int $card)
+    protected function showCard(int $card): void
     {
         foreach ($this->cards[$card] as $line) {
             foreach ($line as $n) {
@@ -99,13 +99,7 @@ class Day04 extends AbstractSolver
 
     protected function isColFilled(array $card, int $col): bool
     {
-        foreach ($card as $line) {
-            if ($line[$col] >= 0) {
-                return false;
-            }
-        }
-
-        return true;
+        return empty(array_filter($card, static fn (array $line) => $line[$col] >= 0));
     }
 
     protected function readTextInput(): array
