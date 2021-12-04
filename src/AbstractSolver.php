@@ -6,6 +6,7 @@ namespace MueR\AdventOfCode;
 
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
+use RuntimeException;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
@@ -58,19 +59,20 @@ abstract class AbstractSolver
     final protected function getInput(?int $index = null): array|string|int
     {
         if ($index !== null) {
-            return $this->test ? $this->testInput[$index] : $this->input[$index];
+            return $this->input[$index];
         }
 
-        return $this->test ? $this->testInput : $this->input;
+        return $this->input;
     }
 
     protected function readPhpInput()
     {
-        if (!file_exists(__DIR__ . '/' .$this->ns . '/input.php')) {
-            return [];
+        $file = __DIR__ . '/' .$this->ns . '/' . ($this->test ? 'test' : 'input') . '.php';
+        if (!file_exists($file)) {
+            throw new RuntimeException(sprintf('Input file "%s" does not exist.', $file));
         }
 
-        return require __DIR__ . '/' .$this->ns . '/input.php';
+        return require $file;
     }
 
     #[Pure]
@@ -81,11 +83,12 @@ abstract class AbstractSolver
 
     protected function readText(): string
     {
-        if (!file_exists(__DIR__ . '/' .$this->ns . '/input.txt')) {
-            return '';
+        $file = __DIR__ . '/' .$this->ns . '/' . ($this->test ? 'test' : 'input') . '.txt';
+        if (!file_exists($file)) {
+            throw new RuntimeException(sprintf('Input file "%s" does not exist.', $file));
         }
 
-        $content = file_get_contents(__DIR__ . '/' .$this->ns . '/input.txt');
+        $content = file_get_contents($file);
 
         return trim($content);
     }

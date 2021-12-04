@@ -13,21 +13,6 @@ use MueR\AdventOfCode\AbstractSolver;
  */
 class Day03 extends AbstractSolver
 {
-    protected array $testInput = [
-        '00100',
-        '11110',
-        '10110',
-        '10111',
-        '10101',
-        '01111',
-        '00111',
-        '11100',
-        '10000',
-        '11001',
-        '00010',
-        '01010'
-    ];
-
     public function partOne() : int
     {
         $gamma = $epsilon = '';

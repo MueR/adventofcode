@@ -13,8 +13,6 @@ use MueR\AdventOfCode\AbstractSolver;
  */
 class Day01 extends AbstractSolver
 {
-    protected array $testInput = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
-
     public function partOne() : int
     {
         for ($result = 0, $i = 0, $m = count($this->getInput()) - 1; $i < $m; $i++) {

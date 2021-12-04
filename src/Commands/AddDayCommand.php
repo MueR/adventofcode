@@ -52,9 +52,11 @@ class AddDayCommand extends Command
 
         $year = $year ?? (int)date('Y');
         $class = sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $year, $day, $day);
+        $filename = dirname(__DIR__) . '/' . str_replace('\\', '/', substr($class, strlen('MueR\\AdventOfCode\\'))) . '.php';
 
         if (class_exists($class)) {
             $output->writeln('Class ' . $class . ' already exists, skipping');
+            $this->createInputFiles($filename);
             return Command::SUCCESS;
         }
 
@@ -105,17 +107,23 @@ class AddDayCommand extends Command
         ;
 
         $fileContent = $fileGenerator->generate();
-        // Sadly, we must do this, since laminas-code does not generate property types.
-        //$fileContent = preg_replace('/protected (array )?\$testInput = \[[\s]+];/', 'protected array $testInput = [];', $fileContent);
 
-        $filename = dirname(__DIR__) . '/' . str_replace('\\', '/', substr($class, strlen('MueR\\AdventOfCode\\'))) . '.php';
         file_put_contents($filename, $fileContent);
         $output->writeln(sprintf('<fg=green>✔</> Class %s created.', $filename));
-        $inputName = substr($filename, 0, -9) . 'input.txt';
+        $this->createInputFiles($filename);
+
+        return Command::SUCCESS;
+    }
+
+    private function createInputFiles(string $className): void
+    {
+        $inputName = substr($className, 0, -9) . 'input.txt';
         if (!file_exists($inputName)) {
             touch($inputName);
         }
-
-        return Command::SUCCESS;
+        $testInputName = substr($className, 0, -9) . 'test.txt';
+        if (!file_exists($testInputName)) {
+            touch($testInputName);
+        }
     }
 }
