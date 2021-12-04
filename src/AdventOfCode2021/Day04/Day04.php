@@ -99,10 +99,7 @@ class Day04 extends AbstractSolver
         foreach ($cards as $index => $cardText) {
             foreach (explode("\n", $cardText) as $row => $line) {
                 $col = 0;
-                foreach (explode(' ', $line) as $number) {
-                    if (trim($number) === '') {
-                        continue;
-                    }
+                foreach (array_filter(explode(' ', $line), static fn (string $entry) => $entry !== '') as $number) {
                     $this->cards[$index][$row][$col++] = (int)$number;
                 }
             }
