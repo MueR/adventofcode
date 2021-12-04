@@ -1,8 +1,17 @@
 # Advent of Code
 
+If you clone or fork my repository, be a fair player and remove all puzzle solutions.
+A quick method to get you started:
+
+```shell
+YEAR=2021
+rm -rf "src/AdventOfCode$YEAR/Day*/*"
+bin/console add:year -y $YEAR
+```
+
 ## Usage
 ```shell
-bin/console solve solve [-y|--year YEAR] [-d|--day DAY] [-t|--test]
+bin/console [solve] [-y|--year YEAR] [-d|--day DAY] [-t|--test]
 ```
 
 ### Optional command line parameters
@@ -15,11 +24,13 @@ Option      Default         Description
 ```
 
 ## Other commands
+Prepares all classes for the entire edition.
+Default value: current year
 ```shell
-# Prepares all classes for the entire edition.
-# Default value: current year
 bin/console add:year --year YEAR
-# Adds the class for day X.
-# Year parameter is optional. Default is current year.
+```
+Adds the class for day X.
+Year parameter is optional. Default is current year.
+```shell
 bin/console add:day --day DAY [-y|--year YEAR]
 ```
