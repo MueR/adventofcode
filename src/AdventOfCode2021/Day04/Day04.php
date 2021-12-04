@@ -69,7 +69,7 @@ class Day04 extends AbstractSolver
 
                         $bingo = $this->checkBingo($this->cards[$card], $row, $col);
                         if ($bingo) {
-                            printf("BINGO Card %d Num %d\n\n", $card, $number);
+                            printf("BINGO Card %d Num %d\n\n", $card + 1, $number);
                             $this->showCard($card);
                         }
                         return $bingo;
