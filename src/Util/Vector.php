@@ -2,6 +2,8 @@
 
 namespace MueR\AdventOfCode\Util;
 
+use JetBrains\PhpStorm\Pure;
+
 class Vector
 {
     public function __construct(public int $x, public int $y)
@@ -13,10 +15,12 @@ class Vector
         return $this->x === $vector->x && $this->y === $vector->y;
     }
 
-    public function move($x, $y): void
+    public function move(int $x, int $y): self
     {
         $this->x += $x;
         $this->y += $y;
+
+        return $this;
     }
 
     public function __toString(): string
@@ -24,6 +28,7 @@ class Vector
         return $this->x . ',' . $this->y;
     }
 
+    #[Pure]
     public static function fromString(string $string): self
     {
         [$x, $y] = explode(',', $string);

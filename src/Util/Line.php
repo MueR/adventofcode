@@ -4,8 +4,11 @@ namespace MueR\AdventOfCode\Util;
 
 class Line
 {
+    private array $points = [];
+
     public function __construct(public Vector $start, public Vector $end)
     {
+        $this->pointsOnLine();
     }
 
     public function isHorizontal(): bool
@@ -20,17 +23,18 @@ class Line
 
     public function pointsOnLine(): array
     {
-        $points = [];
-        $current = clone $this->start;
-        $stepX = Util::sign($this->end->x - $this->start->x);
-        $stepY = Util::sign($this->end->y - $this->start->y);
+        if (empty($this->points)) {
+            $current = clone $this->start;
+            $stepX = Util::sign($this->end->x - $this->start->x);
+            $stepY = Util::sign($this->end->y - $this->start->y);
 
-        while (!$current->equals($this->end)) {
-            $points[] = clone $current;
-            $current->move($stepX, $stepY);
+            while (!$current->equals($this->end)) {
+                $this->points[] = clone $current;
+                $current->move($stepX, $stepY);
+            }
+            $this->points[] = $this->end;
         }
-        $points[] = $this->end;
 
-        return $points;
+        return $this->points;
     }
 }
