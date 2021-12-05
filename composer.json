@@ -11,7 +11,8 @@
     "php": "8.*",
     "ext-mbstring": "*",
     "symfony/console": "^6.0",
-    "symfony/stopwatch": "^6.0"
+    "symfony/stopwatch": "^6.0",
+    "athari/yalinqo": "^2.4"
   },
   "autoload": {
     "psr-4": {
