@@ -8,7 +8,7 @@ use Traversable;
 class CubeGrid
 {
     /**
-     * @var SplObjectStorage{Cube}
+     * @var SplObjectStorage<Cube, bool>
      */
     public SplObjectStorage $cubes;
 
@@ -19,9 +19,11 @@ class CubeGrid
             : null;
     }
 
-    public function addCube(Cube $cube, bool $active = false): void
+    public function addCube(Cube $cube, bool $active = false): self
     {
         $this->cubes->attach($cube, $active);
+
+        return $this;
     }
 
     public function isActive(Cube $cube): bool
@@ -29,21 +31,27 @@ class CubeGrid
         return true === $this->cubes[$cube];
     }
 
-    public function toggleState(Cube $cube): void
+    public function toggleState(Cube $cube): self
     {
         if ($this->cubes->contains($cube)) {
             $this->cubes[$cube] = !$this->cubes[$cube];
         }
+
+        return $this;
     }
 
-    public function activate(Cube $cube): void
+    public function activate(Cube $cube): self
     {
         $this->cubes[$cube] = true;
+
+        return $this;
     }
 
-    public function deactivate(Cube $cube): void
+    public function deactivate(Cube $cube): self
     {
         $this->cubes[$cube] = false;
+
+        return $this;
     }
 
     public function getNeighbours(Cube $cube): Traversable
@@ -68,6 +76,10 @@ class CubeGrid
             $toDeactivate = [];
 
             foreach ($this->cubes as $cube => $state) {
+                /**
+                 * @var Cube $cube
+                 * @var boolean $state
+                 */
                 $activeNeighbours = count(iterator_to_array($this->getActiveNeighbours($cube)));
                 if ($activeNeighbours !== 2 && $activeNeighbours !== 3) {
                     $toDeactivate[] = $cube;
