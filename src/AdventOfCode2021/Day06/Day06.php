@@ -41,7 +41,7 @@ class Day06 extends AbstractSolver
     }
 
     protected function reproduce(int $state, int $days): int
-    {cd
+    {
         $result = 1;
         if ($state > $days) {
             return $result;
