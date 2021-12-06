@@ -28,8 +28,8 @@ abstract class AbstractSolver
         $this->parse();
     }
 
-    abstract public function partOne(): int;
-    abstract public function partTwo(): int;
+    abstract public function partOne(): int|float;
+    abstract public function partTwo(): int|float;
 
     public function lap(): StopwatchEvent
     {

@@ -29,15 +29,19 @@ class Day05 extends AbstractSolver
         return $this->getDangerCount($this->lines);
     }
 
+    /**
+     * @param Line[] $lines
+     */
     protected function getDangerCount(array $lines): int
     {
         $points = [];
         foreach ($lines as $line) {
             foreach ($line->pointsOnLine() as $point) {
-                if (!array_key_exists((string) $point, $points)) {
-                    $points[(string) $point] = 0;
+                $point = (string) $point;
+                if (!array_key_exists($point, $points)) {
+                    $points[$point] = 0;
                 }
-                $points[(string) $point]++;
+                $points[$point]++;
             }
         }
 
