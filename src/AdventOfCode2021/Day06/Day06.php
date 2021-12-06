@@ -15,51 +15,37 @@ class Day06 extends AbstractSolver
 {
     protected array $fish;
 
-    public function partOne() : int
+    public function partOne(int $days = 80) : int
     {
-        $total = 0;
-        foreach ($this->fish as $fish) {
-            $total += $this->reproduce($fish, 80);
+        for ($i = 0; $i < $days; $i++) {
+            $this->day();
         }
 
-        return $total;
+        return array_sum($this->fish);
     }
 
     public function partTwo() : int
     {
-        return $this->reproduce(1, 256);
-        $total = 0;
-        $results = [];
-        foreach (array_unique($this->fish) as $state) {
-            $results[$state] = $this->reproduce($state, 256);
-        }
-        foreach ($this->fish as $state) {
-            $total += $results[$state];
-        }
+        $this->parse();
 
-        return $total;
+        return $this->partOne(256);
     }
 
-    protected function reproduce(int $state, int $days): int
+    protected function day(): void
     {
-        $result = 1;
-        if ($state > $days) {
-            return $result;
+        $newFish = $this->fish[0];
+        for ($i = 1; $i < 9; $i++) {
+            $this->fish[$i - 1] = $this->fish[$i];
         }
-        for ($range = [], $i = $days - $state; $i > 0; $i -= 7) {
-            $range[] = $i;
-        }
-        foreach ($range as $day) {
-            print $day . "\n";
-            $result += $this->reproduce(8, $day - 1);
-        }
-
-        return $result;
+        $this->fish[6] += $newFish;
+        $this->fish[8] = $newFish;
     }
 
     protected function parse(): void
     {
-        $this->fish = array_map(static fn (string $number) => (int)$number, explode(',', $this->readText()));
+        $this->fish = array_fill_keys(range(0, 8), 0);
+        foreach (explode(',', $this->readText()) as $state) {
+            $this->fish[(int) $state]++;
+        }
     }
 }
-
