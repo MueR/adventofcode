@@ -38,7 +38,7 @@ class Day07 extends AbstractSolver
         return min($min, $max);
     }
 
-    public function align(array $positions, int $to, callable $fuelCalculator)
+    public function align(array $positions, int $to, callable $fuelCalculator): int
     {
         $fuel = 0;
         foreach ($positions as $current) {
