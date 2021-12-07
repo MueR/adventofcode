@@ -14,24 +14,28 @@ use MueR\AdventOfCode\AbstractSolver;
 class Day07 extends AbstractSolver
 {
     protected array $positions = [];
-    protected array $perPosition = [];
-    protected int $finalPosition;
 
     public function partOne() : int
     {
         $min = array_map(function ($position) {
             return $this->align($this->positions, $position, fn(int $current, int $to) => abs($current - $to));
-        }, array_keys($this->perPosition));
-        $this->finalPosition = array_search(min($min), $min, true);
+        }, array_unique($this->positions));
+        $finalPosition = array_search(min($min), $min, true);
 
-        return $min[$this->finalPosition];
+        return $min[$finalPosition];
     }
 
     public function partTwo() : int
     {
-        return $this->align($this->positions, $this->finalPosition, function (int $current, int $to) {
-            return array_sum(range(1, abs($current - $to)));
-        });
+        $average = array_sum($this->positions) / count($this->positions);
+        $calc = function (int $current, int $to) {
+            $distance = abs($current - $to);
+            return $distance * ($distance + 1) / 2;
+        };
+        $min = $this->align($this->positions, (int)floor($average), $calc);
+        $max = $this->align($this->positions, (int)ceil($average), $calc);
+
+        return min($min, $max);
     }
 
     public function align(array $positions, int $to, callable $fuelCalculator)
@@ -47,10 +51,6 @@ class Day07 extends AbstractSolver
     protected function parse(): void
     {
         $this->positions = array_map(fn (string $pos) => (int) $pos, explode(',', $this->readText()));
-        $this->perPosition = array_fill_keys(range(min($this->positions), max($this->positions)), 0);
-        foreach ($this->positions as $pos) {
-            $this->perPosition[$pos]++;
-        }
     }
 }
 
