@@ -17,25 +17,23 @@ class Day07 extends AbstractSolver
 
     public function partOne() : int
     {
-        $min = array_map(function ($position) {
-            return $this->align($this->positions, $position, fn(int $current, int $to) => abs($current - $to));
-        }, array_unique($this->positions));
-        $finalPosition = array_search(min($min), $min, true);
+        $average = $this->positions[count($this->positions) / 2];
 
-        return $min[$finalPosition];
+        return $this->align($this->positions, $average, fn (int $position, int $to) => (int) abs($position - $average));
     }
 
     public function partTwo() : int
     {
         $average = array_sum($this->positions) / count($this->positions);
-        $calc = function (int $current, int $to) {
+        $calc = static function (int $current, int $to) {
             $distance = abs($current - $to);
             return $distance * ($distance + 1) / 2;
         };
-        $min = $this->align($this->positions, (int)floor($average), $calc);
-        $max = $this->align($this->positions, (int)ceil($average), $calc);
 
-        return min($min, $max);
+        return min(
+            $this->align($this->positions, (int)floor($average), $calc),
+            $this->align($this->positions, (int)ceil($average), $calc)
+        );
     }
 
     public function align(array $positions, int $to, callable $fuelCalculator): int
@@ -50,7 +48,8 @@ class Day07 extends AbstractSolver
 
     protected function parse(): void
     {
-        $this->positions = array_map(fn (string $pos) => (int) $pos, explode(',', $this->readText()));
+        $this->positions = array_map(static fn (string $pos) => (int) $pos, explode(',', $this->readText()));
+        natsort($this->positions);
     }
 }
 
