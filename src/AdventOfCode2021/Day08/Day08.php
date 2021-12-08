@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode\AdventOfCode2021\Day08;
 
-use JetBrains\PhpStorm\ArrayShape;
 use MueR\AdventOfCode\AbstractSolver;
 
 /**
