@@ -25,8 +25,8 @@ class Line
     {
         if (empty($this->points)) {
             $current = clone $this->start;
-            $stepX = Util::sign($this->end->x - $this->start->x);
-            $stepY = Util::sign($this->end->y - $this->start->y);
+            $stepX = Math::sign($this->end->x - $this->start->x);
+            $stepY = Math::sign($this->end->y - $this->start->y);
 
             while (!$current->equals($this->end)) {
                 $this->points[] = clone $current;

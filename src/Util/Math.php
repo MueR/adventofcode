@@ -2,7 +2,7 @@
 
 namespace MueR\AdventOfCode\Util;
 
-class Util
+class Math
 {
     public static function sign(int $n): int
     {
