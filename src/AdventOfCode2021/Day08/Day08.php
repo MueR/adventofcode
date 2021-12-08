@@ -51,15 +51,25 @@ class Day08 extends AbstractSolver
     {
         $this->signalsPerDigit = array_fill_keys(range(0, 9), '');
         $tests = [
+            // 1 is the only one with 2 segments
             '1' => fn (string $pattern) => strlen($pattern) === 2,
+            // 7 is the only one with 3 segments
             '7' => fn (string $pattern) => strlen($pattern) === 3,
+            // 4 is the only one with 4 segments
             '4' => fn (string $pattern) => strlen($pattern) === 4,
+            // 8 is the only one with 7 segments
             '8' => fn (string $pattern) => strlen($pattern) === 7,
+            // 9 matches segments for 4 and 7 (5 segments) plus 1 extra
             '9' => fn (string $pattern) => strlen($pattern) === 6 && similar_text($pattern, $this->sortPattern($this->signalsPerDigit[4] . $this->signalsPerDigit[7])) === 5,
+            // 0 is 6 segments, matching 7's segments (9 is already out)
             '0' => fn (string $pattern) => strlen($pattern) === 6 && similar_text($pattern, $this->signalsPerDigit[7]) === 3,
+            // 3 is 5 segments and matches 1's segments
             '3' => fn (string $pattern) => strlen($pattern) === 5 && similar_text($pattern, $this->signalsPerDigit[1]) === 2,
+            // 5 is 5 segments, matching 3 of 4 segments with 4.
             '5' => fn (string $pattern) => strlen($pattern) === 5 && similar_text($pattern, $this->signalsPerDigit[4]) === 3,
+            // 2 is the only one remaining with length 5
             '2' => fn (string $pattern) => strlen($pattern) === 5,
+            // aaaaand that just leaves 6.
             '6' => fn (string $pattern) => true,
         ];
         foreach ($tests as $digit => $test) {
