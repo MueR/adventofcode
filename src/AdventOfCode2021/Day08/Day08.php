@@ -39,7 +39,7 @@ class Day08 extends AbstractSolver
             $this->mapLine($sequence['patterns']);
             $output = '';
             foreach ($sequence['shown'] as $pattern) {
-                $output .= array_search($this->sortPattern($pattern), $this->signalsPerDigit, true);
+                $output .= array_search($pattern, $this->signalsPerDigit, true);
             }
             $results[] = (int)$output;
         }
@@ -49,7 +49,6 @@ class Day08 extends AbstractSolver
 
     protected function mapLine(array $input)
     {
-        $input = array_map(fn (string $pattern) => $this->sortPattern($pattern), $input);
         $this->signalsPerDigit = array_fill_keys(range(0, 9), '');
         $tests = [
             '1' => fn (string $pattern) => strlen($pattern) === 2,
@@ -68,6 +67,7 @@ class Day08 extends AbstractSolver
                if ($test($pattern)) {
                    unset($input[$key]);
                    $this->signalsPerDigit[$digit] = $pattern;
+                   break;
                }
             }
         }
