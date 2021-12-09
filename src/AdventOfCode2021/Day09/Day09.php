@@ -39,8 +39,8 @@ class Day09 extends AbstractSolver
             $result[] = $position->findBasin($this->points);
         }
         sort($result, SORT_DESC);
-        [$a, $b, $c] = array_slice($result, -3);
-        return $a * $b * $c;
+
+        return array_product(array_slice($result, -3));
     }
 
     protected function parse(): void
