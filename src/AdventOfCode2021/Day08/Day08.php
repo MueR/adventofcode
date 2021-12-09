@@ -47,9 +47,10 @@ class Day08 extends AbstractSolver
         return array_sum($results);
     }
 
-    protected function mapLine(array $input)
+    protected function mapLine(array $input): void
     {
         $this->signalsPerDigit = array_fill_keys(range(0, 9), '');
+        /** @noinspection PackedHashtableOptimizationInspection */
         $tests = [
             // 1 is the only one with 2 segments
             '1' => static fn (string $pattern) => strlen($pattern) === 2,

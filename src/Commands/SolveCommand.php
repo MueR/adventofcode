@@ -2,6 +2,8 @@
 
 namespace MueR\AdventOfCode\Commands;
 
+use Error;
+use Exception;
 use MueR\AdventOfCode\AbstractSolver;
 use MueR\AdventOfCode\AdventOfCode;
 use Symfony\Component\Console\Command\Command;
@@ -19,7 +21,7 @@ class SolveCommand extends Command
 {
     protected static $defaultName = 'solve';
     private int $year;
-    private array $days = [];
+
     private Table $table;
 
     protected function configure(): void
@@ -48,7 +50,7 @@ class SolveCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->year = (int)$input->getOption('year');
-        $this->days = $input->getOption('day') ? [(int)$input->getOption('day')] : range(1, 25);
+        $days = $input->getOption('day') ? [(int)$input->getOption('day')] : range(1, 25);
 
         $formatter = $this->getHelper('formatter');
         $header = $formatter->formatBlock([
@@ -62,7 +64,7 @@ class SolveCommand extends Command
             "\n\n",
         ]);
 
-        if ((bool) $input->getOption('test')) {
+        if ($input->getOption('test')) {
             $output->writeln('Using test input.');
         }
 
@@ -72,10 +74,10 @@ class SolveCommand extends Command
             ->setHeaders(['Day', 'Solution 1', 'Solution 2', 'Memory', 'Runtime'])
             ->setColumnWidths([3, 20, 20, 14, 14]);
 
-        foreach ($this->days as $day) {
+        foreach ($days as $day) {
             try {
                 $this->solve($day, $output, (bool) $input->getOption('test'));
-            } catch (\Exception | \Error $e) {
+            } catch (Exception | Error $e) {
                 $output->write($formatter->formatBlock([
                     sprintf('[%s] in %s on line %d:', get_class($e), sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $this->year, $day, $day), $e->getLine()),
                     $e->getMessage(),

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MueR\AdventOfCode\AdventOfCode2021\Day03;
 
 use MueR\AdventOfCode\AbstractSolver;
+use RuntimeException;
 
 /**
  * Day 3 puzzle.
@@ -44,7 +45,7 @@ class Day03 extends AbstractSolver
             }
         }
 
-        throw new \RuntimeException('No valid combination found.');
+        throw new RuntimeException('No valid combination found.');
     }
 
     public function reduce(array $input, int $position, bool $mostCommon) : array

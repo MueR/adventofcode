@@ -17,6 +17,13 @@ class Day09 extends AbstractSolver
     /** @var Position[] */
     protected array $lowestPoints = [];
 
+    public function __construct(bool $test = false)
+    {
+        parent::__construct($test);
+        // Required if XDebug is enabled.
+        ini_set('xdebug.max_nesting_level', '1024');
+    }
+
     public function partOne() : int
     {
         $lowPoints = 0;

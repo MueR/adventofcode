@@ -40,7 +40,7 @@ class AddDayCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $day = $input->getOption('day');
         $year = $input->getOption('year');
