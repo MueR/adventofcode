@@ -49,7 +49,7 @@ class Day09 extends AbstractSolver
         $this->points = [];
         foreach ($lines as $row => $line) {
             foreach (str_split($line) as $col => $value) {
-                $this->points[(int) $row][(int) $col] = new Position((int) $row, (int) $col, (int) $value);
+                $this->points[$row][$col] = new Position($row, $col, (int) $value);
             }
         }
     }
@@ -84,11 +84,10 @@ class Position
 
     public function findBasin(array $grid, array $inBasin = []): int
     {
-        if ($this->value === 9 || $this->inBasin) {
+        if ($this->value === 9 || $grid[$this->x][$this->y]->inBasin) {
             return 0;
         }
 
-        $this->inBasin = true;
         $grid[$this->x][$this->y]->inBasin = true;
         $notInBasin = array_filter($this->getNeighbours($grid), static fn (Position $pos) => !$pos->inBasin);
 
