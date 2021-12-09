@@ -82,7 +82,7 @@ class Position
         return empty(array_filter($neighbours, static fn (Position $position) => $position->value <= $value));
     }
 
-    public function findBasin(array $grid, array $inBasin = [])
+    public function findBasin(array $grid, array $inBasin = []): int
     {
         if ($this->value === 9 || $this->inBasin) {
             return 0;
@@ -91,8 +91,7 @@ class Position
         $this->inBasin = true;
         $grid[$this->x][$this->y]->inBasin = true;
         $notInBasin = array_filter($this->getNeighbours($grid), static fn (Position $pos) => !$pos->inBasin);
-        $result = array_map(static fn (Position $position) => $position->findBasin($grid), $notInBasin);
 
-        return 1 + array_sum($result);
+        return 1 + (int) array_sum(array_map(static fn (Position $position) => $position->findBasin($grid), $notInBasin));
     }
 }
