@@ -31,7 +31,6 @@ class Day10 extends AbstractSolver
     protected function parseLine(int $index, bool $stopOnError = true): int
     {
         $stack = [];
-        $score = 0;
         $firstInvalid = null;
         $tagsMatch = [')' => '(', ']' => '[', '}' => '{', '>' => '<'];
         $errorScore = [')' => 3, ']' => 57, '}' => 1197, '>' => 25137];
@@ -49,11 +48,9 @@ class Day10 extends AbstractSolver
         if ($firstInvalid === null) {
             $stack = array_reverse($stack);
             foreach ($stack as $char) {
-                $score = ($score * 5) + $fixScore[$char];
+                $this->lines[$index]['score'] = ($this->lines[$index]['score'] * 5) + $fixScore[$char];
             }
         }
-
-        $this->lines[$index]['score'] = $score;
 
         return (int)$firstInvalid;
     }
