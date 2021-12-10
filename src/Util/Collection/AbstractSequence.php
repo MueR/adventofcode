@@ -129,7 +129,7 @@ class AbstractSequence extends AbstractCollection implements IteratorAggregate, 
     {
         $newElements = array();
         foreach ($this->elements as $i => $element) {
-            $newElements[$i] = $callable($element);
+            $newElements[$i] = $callable($element, $i);
         }
 
         return $this->createNew($newElements);
