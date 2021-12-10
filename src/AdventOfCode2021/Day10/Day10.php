@@ -10,7 +10,7 @@ class Day10 extends AbstractSolver
 {
     protected array $lines = [];
 
-    public function partOne(): int|float
+    public function partOne(): int
     {
         $scores = [];
         foreach ($this->lines as $i => $line) {
@@ -20,7 +20,7 @@ class Day10 extends AbstractSolver
         return array_sum($scores);
     }
 
-    public function partTwo(): int|float
+    public function partTwo(): int
     {
         $incompleteLines = array_filter($this->lines, static fn(array $line) => $line['score'] > 0);
         usort($incompleteLines, static fn(array $line1, array $line2) => $line2['score'] < $line1['score']);
