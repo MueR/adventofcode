@@ -18,10 +18,8 @@ class Day11 extends AbstractSolver
 
     public function partOne(): int
     {
-        printf("Before, energy %d\n", $this->octopuses[0][0]->energyLevel);
-        $this->printGrid();
         $result = 0;
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $result += $this->step();
         }
         return $result;
@@ -29,7 +27,14 @@ class Day11 extends AbstractSolver
 
     public function partTwo(): int
     {
-        return -1;
+        $this->parse();
+
+        $result = 1;
+        $number = array_sum(array_map(static fn (array $line) => count($line), $this->octopuses));
+        while ($this->step() < $number) {
+            $result++;
+        }
+        return $result;
     }
 
     protected function step(): int
@@ -41,7 +46,6 @@ class Day11 extends AbstractSolver
             }
         });
         $result = $this->walk(fn (Octopus $octopus) => $octopus->flashed());
-        $this->printGrid();
 
         return count($result);
     }
@@ -102,8 +106,10 @@ class Octopus
         $this->hasFlashed = true;
         foreach($this->neighbours as $neighbour) {
             $neighbour->increase();
+            if ($neighbour->energyLevel > 9) {
+                $neighbour->flash();
+            }
         }
-        // printf("Octopus %d %d flashed (EL: %d)!\n", $this->x, $this->y, $this->energyLevel);
     }
 
     public function flashed(): ?int
