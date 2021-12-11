@@ -55,7 +55,7 @@ class SolveCommand extends Command
         $formatter = $this->getHelper('formatter');
         $header = $formatter->formatBlock([
             '',
-            sprintf('%33s%s%33s', ' ', 'Advent of Code ' . $this->year, ''),
+            sprintf('%42s%s%41s', ' ', 'Advent of Code ' . $this->year, ''),
             ''
         ], 'bg=green;options=bold');
         $output->write([
@@ -71,8 +71,8 @@ class SolveCommand extends Command
         $this->table = new Table($output);
         $this->table
             ->setStyle('box-double')
-            ->setHeaders(['Day', 'Solution 1', 'Solution 2', 'Memory', 'Runtime'])
-            ->setColumnWidths([3, 20, 20, 14, 14]);
+            ->setHeaders(['Day', 'Solution 1', 'Solution 2', 'Memory', 'Runtime (p1)', 'Runtime (p2)'])
+            ->setColumnWidths([3, 20, 20, 14, 14, 14]);
 
         foreach ($days as $day) {
             try {
@@ -133,7 +133,11 @@ class SolveCommand extends Command
                 ['style' => new TableCellStyle(['align' => 'right'])]
             ),
             new TableCell(
-                $stopwatchData->getDuration() . ' ms',
+                $stopwatchData->getPeriods()[1]->getDuration() . ' ms',
+                ['style' => new TableCellStyle(['align' => 'right'])]
+            ),
+            new TableCell(
+                $stopwatchData->getPeriods()[2]->getDuration() . ' ms',
                 ['style' => new TableCellStyle(['align' => 'right'])]
             ),
         ]);
