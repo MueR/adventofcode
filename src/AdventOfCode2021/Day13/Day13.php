@@ -36,12 +36,12 @@ class Day13 extends AbstractSolver
         }
         /*
          * Output:
-         * #  # ####   ## #  #   ## ###   ##    ##
-         * #  # #       # #  #    # #  # #  #    #
-         * #### ###     # ####    # #  # #       #
-         * #  # #       # #  #    # ###  #       #
-         * #  # #    #  # #  # #  # # #  #  # #  #
-         * #  # ####  ##  #  #  ##  #  #  ##   ##
+         * █  █ ████   ██ █  █   ██ ███   ██    ██
+         * █  █ █       █ █  █    █ █  █ █  █    █
+         * ████ ███     █ ████    █ █  █ █       █
+         * █  █ █       █ █  █    █ ███  █       █
+         * █  █ █    █  █ █  █ █  █ █ █  █  █ █  █
+         * █  █ ████  ██  █  █  ██  █  █  ██   ██
          *
          * Set below to true to print output.
          */
@@ -67,22 +67,11 @@ class Day13 extends AbstractSolver
             $grid[$point->y][$point->x] = '#';
         }
         if ($printPaper) {
-            printf("X: %d Y: %d\n%s\n\n", $this->paperSize['x'], $this->paperSize['y'], implode("\n", $grid));
+            // Just for readability. Since it's multibyte, only replace now.
+            print str_replace('#', '█', implode("\n", $grid)) . "\n\n";
         }
 
-        return array_sum(array_map(fn (string $line) => substr_count($line, '#'), $grid));
-    }
-
-    protected function walk(callable $callable): mixed
-    {
-        $return = [];
-        foreach ($this->points as $x => $row) {
-            foreach ($row as $y => $point) {
-                $return[] = $callable($point);
-            }
-        }
-
-        return array_filter($return);
+        return array_sum(array_map(static fn (string $line) => substr_count($line, '#'), $grid));
     }
 
     protected function parse(): void
@@ -100,7 +89,7 @@ class Day13 extends AbstractSolver
         }
 
         foreach (explode("\n", $folds) as $fold) {
-            if (preg_match('/(x|y)=([\d]+)$/', $fold, $match)) {
+            if (preg_match('/(\w)=([\d]+)$/', $fold, $match)) {
                 $this->folds[] = ['axis' => $match[1], 'index' => (int) $match[2]];
             }
         }

@@ -13,75 +13,102 @@ use MueR\AdventOfCode\AbstractSolver;
  */
 class Day12 extends AbstractSolver
 {
-    protected array $paths = [];
+    protected ?Cave $start = null;
+    protected ?Cave $end = null;
+    /** @var Cave[] */
+    protected array $caves = [];
+    protected array $pathsFound = [];
+    private bool $canVisitSmallTwice = false;
 
-    public function partOne() : int
+    public function partOne(): int
     {
-        return $this->findPaths($this->paths, 'start');
+        return $this->findPaths($this->start, []);
     }
 
-    public function partTwo() : int
+    public function partTwo(): int
     {
-        return $this->findPaths($this->paths, 'start', allowRevisit: true);
+        $this->canVisitSmallTwice = true;
+        return $this->findPaths($this->start, []);
     }
 
-    protected function findPaths(array $paths, string $from, array $smallCavesVisited = [], bool $allowRevisit = false): int
+    protected function findPaths(Cave $currentCave, array $previous, bool $smallCaveRevisitedOnce = false): int
     {
-        $result = 0;
+        if ($currentCave->end) {
+            return 1;
+        }
 
-        if ($this->isSmallCave($from)) {
-            $smallCavesVisited[] = $from;
-            if ($allowRevisit && count($smallCavesVisited) - count(array_unique($smallCavesVisited)) > 1) {
+        $caveAlreadyInPath = in_array($currentCave->name, $previous, true);
+        if ($currentCave->small && $caveAlreadyInPath !== false) {
+            if (!$this->canVisitSmallTwice || $smallCaveRevisitedOnce || $currentCave->start) {
                 return 0;
             }
-            if (!$allowRevisit) {
-                $paths = array_filter($paths, static fn (Path $path) => $path->to !== $from);
-            }
+            $smallCaveRevisitedOnce = true;
         }
 
-        $next = array_filter($paths, static fn (Path $path) => $path->from === $from);
-        if (count($next) === 0) {
-            return 0;
+        $previous[] = $currentCave->name;
+        $result = 0;
+        foreach ($currentCave->linksTo as $nextCave) {
+            $result += $this->findPaths($nextCave, $previous, $smallCaveRevisitedOnce);
         }
-        foreach ($next as $path) {
-            if ($path->to === 'end') {
-                $result++;
-            } else {
-                $result += $this->findPaths($paths, $path->to, $smallCavesVisited, $allowRevisit);
-            }
-        }
+        array_pop($previous);
 
         return $result;
-    }
-
-    protected function isSmallCave(string $cave): bool
-    {
-        return $cave === strtolower($cave) && $cave !== 'start';
     }
 
     protected function parse(): void
     {
         $paths = explode("\n", $this->readText());
-        foreach ($paths as $path)
-        {
+        foreach ($paths as $path) {
             [$from, $to] = explode('-', $path);
-            $this->paths[] = new Path($from, $to);
-            $this->paths[] = new Path($to, $from);
+            $this->addCave($from);
+            $this->addCave($to);
+
+            $this->caves[$from]->link($this->caves[$to]);
+            $this->caves[$to]->link($this->caves[$from]);
         }
-        $this->paths = array_unique($this->paths);
-        $this->paths = array_filter($this->paths, static fn (Path $path) => $path->from !== 'end' && $path->to !== 'start');
+    }
+
+    protected function addCave(string $name): void
+    {
+        if (array_key_exists($name, $this->caves)) {
+            return;
+        }
+        $this->caves[$name] = new Cave($name);
+        if (!$this->start && $this->caves[$name]->start) {
+            $this->start = $this->caves[$name];
+        }
+        if (!$this->end && $this->caves[$name]->end) {
+            $this->end = $this->caves[$name];
+        }
     }
 }
 
-class Path
+class Cave
 {
-    public function __construct(public string $from, public string $to)
+    public bool $start = false;
+    public bool $end = false;
+    public bool $small = false;
+    /** @var Cave[] */
+    public array $linksTo = [];
+
+    public function __construct(public string $name)
     {
+        $this->start = $this->name === 'start';
+        $this->end = $this->name === 'end';
+        $this->small = !$this->start && !$this->end && $this->name === strtolower($this->name);
+    }
+
+    public function link(Cave $cave)
+    {
+        if ($cave->start) {
+            return;
+        }
+        $this->linksTo[] = $cave;
     }
 
     public function __toString(): string
     {
-        return $this->from . '-' . $this->to;
+        return $this->name;
     }
 }
 
