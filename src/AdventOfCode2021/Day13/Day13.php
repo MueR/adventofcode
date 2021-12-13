@@ -45,33 +45,42 @@ class Day13 extends AbstractSolver
          *
          * Set below to true to print output.
          */
-        $this->getPointCount(false);
+        // $this->getPointCount(true);
 
         return 'HEJHJRCJ';
     }
 
     protected function fold(int $at, string $axis): void
     {
+        $this->paperSize[$axis] = $at - 1;
         foreach ($this->points as $point) {
             if ($point->{$axis} > $at) {
                 $point->{$axis} = $at - ($point->$axis - $at);
             }
         }
-        $this->paperSize[$axis] = $at - 1;
     }
 
     protected function getPointCount(bool $printPaper = false): int
     {
-        $grid = array_fill(0, $this->paperSize['y'] + 1, str_repeat(' ', $this->paperSize['x'] + 1));
+        $count = 0;
+        if ($printPaper) {
+            $grid = array_fill(0, $this->paperSize['y'] + 1, str_repeat(' ', $this->paperSize['x'] + 1));
+        }
         foreach ($this->points as $point) {
-            $grid[$point->y][$point->x] = '#';
+            if ($point->x > $this->paperSize['x'] && $point->y > $this->paperSize['y']) {
+                continue;
+            }
+            $count++;
+            if ($printPaper) {
+                $grid[$point->y][$point->x] = '#';
+            }
         }
         if ($printPaper) {
             // Just for readability. Since it's multibyte, only replace now.
             print str_replace('#', '█', implode("\n", $grid)) . "\n\n";
         }
 
-        return array_sum(array_map(static fn (string $line) => substr_count($line, '#'), $grid));
+        return $count;
     }
 
     protected function parse(): void
