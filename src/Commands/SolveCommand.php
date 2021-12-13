@@ -133,11 +133,11 @@ class SolveCommand extends Command
                 ['style' => new TableCellStyle(['align' => 'right'])]
             ),
             new TableCell(
-                $stopwatchData->getPeriods()[1]->getDuration() . ' ms',
+                round($stopwatchData->getPeriods()[1]->getDuration(), 1) . ' ms',
                 ['style' => new TableCellStyle(['align' => 'right'])]
             ),
             new TableCell(
-                $stopwatchData->getPeriods()[2]->getDuration() . ' ms',
+                round($stopwatchData->getPeriods()[2]->getDuration(), 1) . ' ms',
                 ['style' => new TableCellStyle(['align' => 'right'])]
             ),
         ]);
