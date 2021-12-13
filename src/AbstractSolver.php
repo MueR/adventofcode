@@ -29,7 +29,7 @@ abstract class AbstractSolver
     }
 
     abstract public function partOne(): int|float;
-    abstract public function partTwo(): int|float;
+    abstract public function partTwo(): int|float|string;
 
     public function lap(): StopwatchEvent
     {
