@@ -60,14 +60,12 @@ class Grid
     {
         $width = $this->width * $times;
         $height = $this->height * $times;
-
+        $deltas = [[-1, 0], [0, -1], [1, 0], [0, 1]];
         $this->totalRiskLevels = array_fill_keys(range(0, $height - 1), array_fill_keys(range(0, $width - 1), 0));
+
         $toProcess = [new Vector(0, 0)];
         while (count($toProcess) > 0) {
             $point = array_shift($toProcess);
-            $currentRisk = $this->totalRiskLevels[$point->y][$point->x];
-
-            $deltas = [[-1, 0], [0, -1], [1, 0], [0, 1]];
             foreach ($deltas as $delta) {
                 if (
                     !array_key_exists($point->y + $delta[1], $this->totalRiskLevels) ||
@@ -75,7 +73,7 @@ class Grid
                 ) {
                     continue;
                 }
-                $this->calculateRisk($currentRisk, new Vector($point->x + $delta[0], $point->y + $delta[1]), $toProcess);
+                $this->calculateRisk($this->totalRiskLevels[$point->y][$point->x], new Vector($point->x + $delta[0], $point->y + $delta[1]), $toProcess);
             }
         }
 
