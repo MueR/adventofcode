@@ -15,7 +15,7 @@ use MueR\AdventOfCode\AbstractSolver;
 class Day16 extends AbstractSolver
 {
     /** @var Packet[] */
-    private array $packets;
+    private array $packets = [];
 
     public function __construct(bool $test = false)
     {
@@ -43,7 +43,7 @@ class Day16 extends AbstractSolver
         $versionString = $bits[$currentIndex++] . $bits[$currentIndex++] . $bits[$currentIndex++];
         $typeString = $bits[$currentIndex++] . $bits[$currentIndex++] . $bits[$currentIndex++];
         $version = $this->toInt($versionString);
-        $type = PacketType::from($this->toInt($typeString));
+        $type = $this->toInt($typeString);
 
         $packet = new Packet($version, $type);
         if ($parent) {
@@ -141,18 +141,14 @@ class Day16 extends AbstractSolver
             $binString .= $this->hex2bin($char);
         }
 
-        try {
-            $this->readPackets(str_split($binString), 0);
-        } catch (\RuntimeException | \Error $e) {
-            // We reached the end. Nasty, I know.
-        }
+        $this->readPackets(str_split($binString), 0);
     }
 }
 
 class Packet
 {
     /** @param Packet[] $subPackets */
-    public function __construct(public int $version, public PacketType $type, public ?int $value = null, public array $subPackets = [])
+    public function __construct(public int $version, public int $type, public ?int $value = null, public array $subPackets = [])
     {
     }
 
@@ -182,25 +178,20 @@ class Packet
 
     public function debug(int $depth = 0): void
     {
-        printf("%s[V: %d, T: %d] value = %d\n", str_repeat('  ', $depth), $this->version, $this->type->getValue(), $this->value);
+        printf("%s[V: %d, T: %d] value = %d\n", str_repeat('  ', $depth), $this->version, $this->type, $this->value);
         array_map(static fn (Packet $packet) => $packet->debug($depth+1), $this->subPackets);
     }
 }
 
-enum PacketType: int
+class PacketType
 {
-    case SUM = 0;
-    case PROD = 1;
-    case MIN = 2;
-    case MAX = 3;
-    case LITERAL = 4;
-    case GT = 5;
-    case LT = 6;
-    case EQ = 7;
-
-    public function getValue(): int
-    {
-        return $this->value;
-    }
+    public const SUM = 0;
+    public const PROD = 1;
+    public const MIN = 2;
+    public const MAX = 3;
+    public const LITERAL = 4;
+    public const GT = 5;
+    public const LT = 6;
+    public const EQ = 7;
 }
 

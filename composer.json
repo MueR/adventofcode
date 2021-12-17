@@ -8,7 +8,7 @@
     }
   ],
   "require": {
-    "php": "8.1",
+    "php": "8.*",
     "ext-mbstring": "*",
     "symfony/console": "^6.0",
     "symfony/stopwatch": "^6.0"
