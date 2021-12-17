@@ -67,8 +67,6 @@ class Day17 extends AbstractSolver
             'x' => [$target[0], $target[1]],
             'y' => [$target[2], $target[3]],
         ];
-
-        sort($this->testResult);
     }
 }
 
