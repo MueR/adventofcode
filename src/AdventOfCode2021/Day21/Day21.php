@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode\AdventOfCode2021\Day21;
 
+use JetBrains\PhpStorm\Pure;
 use MueR\AdventOfCode\AbstractSolver;
-use SplObjectStorage;
+use MueR\AdventOfCode\Util\Collection\Tuple;
+use MueR\AdventOfCode\Util\Dice;
 
 /**
  * Day 21 puzzle.
@@ -14,52 +16,59 @@ use SplObjectStorage;
  */
 class Day21 extends AbstractSolver
 {
-    /** @var Player[] */
-    private array $players = [];
-    private int $die = 0;
-    private int $rolls = 0;
+    private array $possibleRolls = [];
+    private array $universes = [];
 
     public function partOne(): int
     {
-        $this->players = [
-            new Player(1),
-            new Player(10),
-        ];
+        $playing = new Player($this->test ? 4 : 1);
+        $waiting = new Player($this->test ? 8 : 10);
+        $die = new Dice();
         while (true) {
-            foreach ($this->players as $player => $scoreCard) {
-                if ($this->turn($player, 1000) !== false) {
-                    return $this->players[($player + 1) % count($this->players)]->score * $this->rolls;
+            $moved = $playing->move($die->next() + $die->next() + $die->next());
+            if ($moved->score >= 1000) {
+                return $waiting->score * $die->getTimesRolled();
+            }
+            $playing = $waiting;
+            $waiting = $moved;
+        }
+    }
+
+    public function partTwo(): int|float
+    {
+        $p1 = new Player($this->test ? 4 : 1);
+        $p2 = new Player($this->test ? 8 : 10);
+        $diceRolls = [1, 2, 3];
+        foreach ($diceRolls as $d1) {
+            foreach ($diceRolls as $d2) {
+                foreach ($diceRolls as $d3) {
+                    $this->possibleRolls[$d1 + $d2 + $d3] = ($this->possibleRolls[$d1 + $d2 + $d3] ?? 0) + 1;
                 }
             }
         }
+
+        $result = $this->split($p1, $p2);
+
+        return max($result->getLeft(), $result->getRight());
     }
 
-    public function partTwo(): int
+    protected function split(Player $p1, Player $p2): Tuple
     {
-        $firstGame = new Game(1, 0, 10, 0, true);
-        return -1;
-    }
-
-    protected function turn(int $player, int $winScore): bool|int
-    {
-        for ($i = 0; $i < 3; $i++) {
-            $roll = $this->roll();
-            $this->players[$player]->position += $roll;
+        if (isset($this->universes[(string)$p1][(string)$p2])) {
+            return $this->universes[(string)$p1][(string)$p2];
         }
-        $this->players[$player]->position = 1 + (($this->players[$player]->position - 1) % 10);
-        $this->players[$player]->score += $this->players[$player]->position;
-
-        return $this->players[$player]->score >= $winScore;
-    }
-
-    protected function roll(): int
-    {
-        $this->rolls++;
-        if (++$this->die > 100) {
-            $this->die = 1;
+        $result = new Tuple();
+        for ($roll = 3; $roll < 10; $roll++) {
+            $played = $p1->move($roll);
+            if ($played->score >= 21) {
+                $result = $result->incrementLeft($this->possibleRolls[$roll]);
+            } else {
+                $result = $result->add($this->split($p2, $played)->flip()->times($this->possibleRolls[$roll]));
+            }
         }
+        $this->universes[(string)$p1][(string)$p2] = $result;
 
-        return $this->die;
+        return $result;
     }
 }
 
@@ -68,11 +77,17 @@ class Player
     public function __construct(public int $position, public int $score = 0)
     {
     }
-}
 
-class Game
-{
-    public function __construct(public int $p1Position, public int $p1Score, public int $p2Position, public int $p2Score, public bool $p1Playing)
+    #[Pure]
+    public function move(int $amount): Player
     {
+        $newPosition = $this->position + $amount;
+        $newPosition = 1 + (($newPosition - 1) % 10);
+        return new Player($newPosition, $this->score + $newPosition);
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('%d_%d', $this->position, $this->score);
     }
 }
