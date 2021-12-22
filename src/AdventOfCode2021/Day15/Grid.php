@@ -49,7 +49,7 @@ class Grid
                 ) {
                     continue;
                 }
-                $this->calculateRisk($this->totalRiskLevels[$newY][$point[0]], [$newX, $newY]);
+                $this->calculateRisk($this->totalRiskLevels[$point[1]][$point[0]], [$newX, $newY]);
             }
         }
 
@@ -67,8 +67,8 @@ class Grid
 
         $tileIncrement = floor($x / $width) + floor($y / $height);
         $return = $this->grid[$y % $height][$x % $width] + $tileIncrement;
-        if ($return > 9) {
-            return ($return % 9);
+        while ($return > 9) {
+            $return -= 9;
         }
 
         return (int) $return;

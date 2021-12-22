@@ -22,14 +22,15 @@ class Day13 extends AbstractSolver
     protected array $folds = [];
     protected array $paperSize = ['x' => 0, 'y' => 0];
 
-    public function partOne() : int
+    public function partOne(): int
     {
         $fold = array_shift($this->folds);
         $this->fold($fold['index'], $fold['axis']);
+
         return $this->getPointCount();
     }
 
-    public function partTwo() : string
+    public function partTwo(): string
     {
         foreach ($this->folds as $fold) {
             $this->fold($fold['index'], $fold['axis']);
@@ -45,6 +46,7 @@ class Day13 extends AbstractSolver
          *
          * Set below to true to print output.
          */
+
         // $this->getPointCount(true);
 
         return 'HEJHJRCJ';

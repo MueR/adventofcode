@@ -14,12 +14,12 @@ use RuntimeException;
  */
 class Day03 extends AbstractSolver
 {
-    public function partOne() : int
+    public function partOne() : int|float
     {
         $gamma = $epsilon = '';
-        for ($i = 0, $l = strlen($this->getInput(0)); $i < $l; $i++) {
+        for ($i = 0, $l = strlen($this->input[0]); $i < $l; $i++) {
             $values = [0 => 0, 1 => 0];
-            foreach ($this->getInput() as $bit) {
+            foreach ($this->input as $bit) {
                 $values[((int)$bit[$i])]++;
             }
             $gamma .= $values[0] > $values[1] ? 0 : 1;
@@ -28,9 +28,9 @@ class Day03 extends AbstractSolver
         return bindec($gamma) * bindec($epsilon);
     }
 
-    public function partTwo() : int
+    public function partTwo() : int|float
     {
-        $oxygen = $this->findValue($this->getInput(), true);
+        $oxygen = $this->findValue($this->input, true);
         $co2 = $this->findValue($this->input, false);
 
         return bindec($oxygen) * bindec($co2);
@@ -45,6 +45,7 @@ class Day03 extends AbstractSolver
             }
         }
 
+        var_dump($input);
         throw new RuntimeException('No valid combination found.');
     }
 

@@ -18,10 +18,9 @@ class Day10 extends AbstractSolver
         return array_sum($scores->all());
     }
 
-    public function partTwo(): int|float
+    public function partTwo(): float
     {
         $scores = $this->lines->filter(static fn (array $line) => $line['score'] > 0);
-        $scores->sortWith(static fn (array $line1, array $line2) => $line2['score'] < $line1['score']);
 
         return $scores->get((int) floor($scores->count() / 2))['score'];
     }
@@ -57,5 +56,6 @@ class Day10 extends AbstractSolver
     protected function parse(): void
     {
         $this->lines = new Sequence(array_map(static fn (string $line) => ['input' => $line, 'score' => 0], explode("\n", $this->readText())));
+        $this->lines->sortWith(static fn (array $line1, array $line2) => $line2['score'] - $line1['score']);
     }
 }

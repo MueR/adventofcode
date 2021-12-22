@@ -36,18 +36,20 @@ class Day02 extends AbstractSolver
 
     private function navigate() : void
     {
-        foreach ($this->getInput() as $line) {
-            preg_match('/^(?<direction>up|down|forward) (?<units>\d+)$/im', $line, $instruction);
-            switch ($instruction['direction']) {
+        $input = explode("\n", $this->readText());
+        foreach ($input as $line) {
+            [$direction, $units] = explode(' ', $line);
+            $units = (int) $units;
+            switch ($direction) {
                 case 'forward':
-                    $this->position += $instruction['units'];
-                    $this->depth += $this->aim * $instruction['units'];
+                    $this->position += $units;
+                    $this->depth += $this->aim * $units;
                     break;
                 case 'up':
-                    $this->aim -= $instruction['units'];
+                    $this->aim -= $units;
                     break;
                 case 'down':
-                    $this->aim += $instruction['units'];
+                    $this->aim += $units;
                     break;
             }
         }
