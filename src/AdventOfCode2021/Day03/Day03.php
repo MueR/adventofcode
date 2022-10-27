@@ -17,7 +17,7 @@ class Day03 extends AbstractSolver
     public function partOne() : int|float
     {
         $gamma = $epsilon = '';
-        for ($i = 0, $l = strlen($this->input[0]); $i < $l; $i++) {
+        for ($i = 0, $l = strlen($this->input[0]) - 1; $i < $l; $i++) {
             $values = [0 => 0, 1 => 0];
             foreach ($this->input as $bit) {
                 $values[((int)$bit[$i])]++;
@@ -45,7 +45,6 @@ class Day03 extends AbstractSolver
             }
         }
 
-        var_dump($input);
         throw new RuntimeException('No valid combination found.');
     }
 

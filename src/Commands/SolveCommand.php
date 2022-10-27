@@ -79,7 +79,12 @@ class SolveCommand extends Command
                 $this->solve($day, $output, (bool) $input->getOption('test'));
             } catch (Exception | Error $e) {
                 $output->write($formatter->formatBlock([
-                    sprintf('[%s] in %s on line %d:', get_class($e), sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $this->year, $day, $day), $e->getLine()),
+                    sprintf(
+                        '[%s] in %s on line %d:',
+                        get_class($e),
+                        sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $this->year, $day, $day),
+                        $e->getLine()
+                    ),
                     $e->getMessage(),
                 ], 'bg=red;options=bold') . "\n\n");
             }
