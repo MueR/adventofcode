@@ -37,7 +37,11 @@ class Day10 extends AbstractSolver
                 $stack[] = $char;
                 continue;
             }
-            if ($firstInvalid === null && array_key_exists($char, $tagsMatch) && array_pop($stack) !== $tagsMatch[$char]) {
+            if (
+                $firstInvalid === null &&
+                array_key_exists($char, $tagsMatch) &&
+                array_pop($stack) !== $tagsMatch[$char]
+            ) {
                 $firstInvalid = $errorScore[$char];
             }
         }
@@ -55,7 +59,10 @@ class Day10 extends AbstractSolver
 
     protected function parse(): void
     {
-        $this->lines = new Sequence(array_map(static fn (string $line) => ['input' => $line, 'score' => 0], explode("\n", $this->readText())));
+        $this->lines = new Sequence(array_map(
+            static fn (string $line) => ['input' => $line, 'score' => 0],
+            explode("\n", $this->readText())
+        ));
         $this->lines->sortWith(static fn (array $line1, array $line2) => $line2['score'] - $line1['score']);
     }
 }

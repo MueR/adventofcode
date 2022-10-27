@@ -14,8 +14,6 @@ use SplFixedArray;
  */
 class Day20 extends AbstractSolver
 {
-    private int $width;
-    private int $height;
     private array $image;
     private array $algorithm;
 
@@ -31,7 +29,7 @@ class Day20 extends AbstractSolver
         return $this->count($image);
     }
 
-    protected function runEnhancement(array $image, int $times, bool $displayImage = false): array
+    protected function runEnhancement(array $image, int $times): array
     {
         $infinitePixel = false;
         for ($i = 0; $i < $times; $i++) {
@@ -100,12 +98,12 @@ class Day20 extends AbstractSolver
         $this->algorithm = array_map(static fn (string $char) => $char === '#', str_split($alg));
         array_shift($input);
 
-        $this->width = strlen($input[0]);
-        $this->height = count($input);
+        $width = strlen($input[0]);
+        $height = count($input);
 
-        $this->image = array_fill_keys(range(0, $this->height), []);
-        for ($y = 0; $y < $this->height; $y++) {
-            for ($x = 0; $x < $this->width; $x++) {
+        $this->image = array_fill_keys(range(0, $height), []);
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 $this->image[$y][$x] = ($input[$y][$x] === '#');
             }
         }

@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode\AdventOfCode2021\Day18;
 
-use ArrayIterator;
-use JetBrains\PhpStorm\Pure;
 use MueR\AdventOfCode\AbstractSolver;
-use SplFileObject;
 
 /**
  * Day 18 puzzle.
@@ -16,8 +13,6 @@ use SplFileObject;
  */
 class Day18 extends AbstractSolver
 {
-    private Pair $root;
-
     public function partOne(): float
     {
         return $this->magnitude($this->addLines());
@@ -101,7 +96,7 @@ class Day18 extends AbstractSolver
                 }
             }
 
-            print $this->debug($pair) . "\n";
+            $this->debug($pair, true);
             return true;
         }
 
@@ -114,7 +109,7 @@ class Day18 extends AbstractSolver
         }
         if (!$wentBoom && $pair->rightPair !== null) {
             $wentBoom = $this->explode($pair->rightPair, $depth + 1, $pairs);
-            print $this->debug($pair) . "\n";
+            $this->debug($pair, true);
             if ($wentBoom && $depth === 3) {
                 $pair->rightPair = null;
                 $pair->right = 0;
@@ -122,7 +117,7 @@ class Day18 extends AbstractSolver
 
         }
 
-        print $this->debug($pair) . "\n";
+        $this->debug($pair, true);
 
         return $wentBoom;
     }
@@ -140,39 +135,10 @@ class Day18 extends AbstractSolver
 
         if ($pair->rightPair !== null) {
             $this->flatten($pair->rightPair, $flattened);
-        } else if (!$added) {
+        } elseif (!$added) {
             $flattened[] = $pair;
             $pair->pairIndex = count($flattened) - 1;
         }
-    }
-
-    protected function split(Pair $pair): bool
-    {
-        $split = false;
-        if ($pair->leftPair === null && $pair->left > 9) {
-            $new = new Pair(floor($pair->left / 2), ceil($pair->right / 2));
-            $pair->leftPair = $new;
-            $new->parent = $pair;
-
-            return true;
-        } else if ($pair->leftPair !== null) {
-            $split = $this->split($pair->leftPair);
-        }
-
-        if (!$split) {
-            if ($pair->rightPair === null && $pair->right > 9) {
-                $new = new Pair(floor($pair->right / 2), ceil($pair->right / 2.0));
-                $pair->rightPair = $new;
-                $new->parent = $pair;
-
-                return true;
-            }
-            if ($pair->rightPair !== null) {
-                $split = $this->split($pair->rightPair);
-            }
-        }
-
-        return $split;
     }
 
     public function magnitude(Pair $pair): float
@@ -212,7 +178,7 @@ class Day18 extends AbstractSolver
         return $pair;
     }
 
-    private function debug(Pair $pair): void
+    private function debug(Pair $pair, bool $lineFeed = false): void
     {
         echo '[';
         if ($pair->leftPair === null) {
@@ -227,57 +193,8 @@ class Day18 extends AbstractSolver
             $this->debug($pair->rightPair);
         }
         echo ']';
-    }
-}
-
-class Pair
-{
-    public ?Pair $leftPair = null;
-    public ?Pair $rightPair = null;
-    public ?Pair $parent = null;
-    public int $endIndex = -1;
-    public int $pairIndex = -1;
-
-    public function __construct(public int|float|null $left = null, public int|float|null $right = null)
-    {
-    }
-
-    #[Pure]
-    public function add(Pair $pair): Pair
-    {
-        $new = new Pair();
-        $new->leftPair = $this;
-        $new->rightPair = $pair;
-
-        return $new;
-    }
-
-    public function split(): Pair
-    {
-        if ($this->left > 9) {
-            $newLeft = new Pair(
-                floor($this->left / 2),
-                ceil($this->left / 2)
-            );
-            $newLeft->parent = $this;
-            $this->leftPair = $newLeft;
-            $this->left = null;
+        if ($lineFeed) {
+            echo "\n";
         }
-        if ($this->right > 9) {
-            $newRight = new Pair(
-                floor($this->right / 2),
-                ceil($this->right / 2)
-            );
-            $newRight->parent = $this;
-            $this->rightPair = $newRight;
-            $this->right = null;
-        }
-
-        return $this;
-    }
-
-    public function __toString(): string
-    {
-        return '[' . (string) ($this->left ?? (string) $this->leftPair) . ',' . (string) ($this->right ?? (string) $this->rightPair) . ']';
     }
 }

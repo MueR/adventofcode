@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode\AdventOfCode2021\Day21;
 
-use JetBrains\PhpStorm\Pure;
 use MueR\AdventOfCode\AbstractSolver;
 use MueR\AdventOfCode\Util\Collection\Tuple;
 use MueR\AdventOfCode\Util\Dice;
@@ -69,25 +68,5 @@ class Day21 extends AbstractSolver
         $this->universes[(string)$p1][(string)$p2] = $result;
 
         return $result;
-    }
-}
-
-class Player
-{
-    public function __construct(public int $position, public int $score = 0)
-    {
-    }
-
-    #[Pure]
-    public function move(int $amount): Player
-    {
-        $newPosition = $this->position + $amount;
-        $newPosition = 1 + (($newPosition - 1) % 10);
-        return new Player($newPosition, $this->score + $newPosition);
-    }
-
-    public function __toString(): string
-    {
-        return sprintf('%d_%d', $this->position, $this->score);
     }
 }

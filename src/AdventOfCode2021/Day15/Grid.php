@@ -2,8 +2,6 @@
 
 namespace MueR\AdventOfCode\AdventOfCode2021\Day15;
 
-use MueR\AdventOfCode\Util\Vector;
-
 class Grid
 {
     private int $width;

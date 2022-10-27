@@ -52,11 +52,11 @@ class Day11 extends AbstractSolver
         return count($result);
     }
 
-    protected function walk(callable $callable): mixed
+    protected function walk(callable $callable): array
     {
         $return = [];
-        foreach ($this->octopuses as $x => $octopuses) {
-            foreach ($octopuses as $y => $octopus) {
+        foreach ($this->octopuses as $octopuses) {
+            foreach ($octopuses as $octopus) {
                 $return[] = $callable($octopus);
             }
         }

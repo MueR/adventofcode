@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode\AdventOfCode2021\Day15;
 
-use JetBrains\PhpStorm\Pure;
 use MueR\AdventOfCode\AbstractSolver;
-use MueR\AdventOfCode\Util\Vector;
 
 /**
  * Day 15 puzzle.
