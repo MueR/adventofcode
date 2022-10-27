@@ -28,22 +28,9 @@ class SolveCommand extends Command
     {
         $this
             ->setDescription('Solve puzzles')
-            ->addOption(
-                name: 'year',
-                shortcut: 'y',
-                mode: InputOption::VALUE_REQUIRED,
-                default: (int)date('Y')
-            )
-            ->addOption(
-                name: 'day',
-                shortcut: 'd',
-                mode: InputOption::VALUE_REQUIRED,
-            )
-            ->addOption(
-                name: 'test',
-                shortcut: 't',
-                mode: InputOption::VALUE_NONE,
-            )
+            ->addOption('year', 'y', mode: InputOption::VALUE_REQUIRED, default: (int)date('Y'))
+            ->addOption('day', 'd', mode: InputOption::VALUE_REQUIRED)
+            ->addOption('test', 't', mode: InputOption::VALUE_NONE)
         ;
     }
 

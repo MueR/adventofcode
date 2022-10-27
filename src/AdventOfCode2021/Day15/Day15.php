@@ -28,6 +28,12 @@ class Day15 extends AbstractSolver
     protected function parse(): void
     {
         $lines = explode("\n", $this->readText());
-        $this->grid = new Grid(array_map(static fn (string $line) => array_map(static fn (string $char) => (int) $char, str_split($line)), $lines));
+        $this->grid = new Grid(array_map(
+            static fn (string $line) => array_map(
+                static fn (string $char) => (int) $char,
+                str_split($line)
+            ),
+            $lines
+        ));
     }
 }

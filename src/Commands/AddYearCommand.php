@@ -18,11 +18,7 @@ class AddYearCommand extends Command
     {
         $this
             ->setDescription('Add year')
-            ->addOption(
-                name: 'year',
-                shortcut: 'y',
-                mode: InputOption::VALUE_REQUIRED,
-            );
+            ->addOption('year', 'y', mode: InputOption::VALUE_REQUIRED);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

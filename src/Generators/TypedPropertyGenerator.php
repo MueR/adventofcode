@@ -47,11 +47,24 @@ class TypedPropertyGenerator extends PropertyGenerator
                 ));
             }
 
-            return $output . $this->indentation . $this->getVisibility() . ' const ' . $name . ' = '
-                . ($defaultValue !== null ? $defaultValue->generate() : 'null;');
+            $output .= sprintf(
+                "%s%s%s const %s = %s",
+                $output,
+                $this->indentation,
+                $this->getVisibility(),
+                $name,
+                ($defaultValue !== null ? $defaultValue->generate() : 'null;')
+            );
         }
 
-        $output .= $this->indentation . $this->getVisibility() . ($this->isStatic() ? ' static' : '') . ($this->getType() ? ' ' . $this->getType() : '') . ' $' . $name;
+        $output .= sprintf(
+            "%s%s%s%s $%s",
+            $this->indentation,
+            $this->getVisibility(),
+            ($this->isStatic() ? ' static' : ''),
+            ($this->getType() ? ' ' . $this->getType() : ''),
+            $name
+        );
 
         if ($defaultValue === null) {
             return $output . ';';

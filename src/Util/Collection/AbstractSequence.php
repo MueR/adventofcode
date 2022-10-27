@@ -181,7 +181,7 @@ class AbstractSequence extends AbstractCollection implements IteratorAggregate, 
 
     public function get(int $index): mixed
     {
-        if ( ! isset($this->elements[$index])) {
+        if (!isset($this->elements[$index])) {
             throw new OutOfBoundsException(sprintf('The index "%s" does not exist in this sequence.', $index));
         }
 
@@ -190,8 +190,12 @@ class AbstractSequence extends AbstractCollection implements IteratorAggregate, 
 
     public function remove(int $index): mixed
     {
-        if ( ! isset($this->elements[$index])) {
-            throw new OutOfBoundsException(sprintf('The index "%d" is not in the interval [0, %d).', $index, count($this->elements)));
+        if (!isset($this->elements[$index])) {
+            throw new OutOfBoundsException(sprintf(
+                'The index "%d" is not in the interval [0, %d).',
+                $index,
+                count($this->elements)
+            ));
         }
 
         $element = $this->elements[$index];
@@ -203,7 +207,7 @@ class AbstractSequence extends AbstractCollection implements IteratorAggregate, 
 
     public function update(int $index, mixed $value): void
     {
-        if ( ! isset($this->elements[$index])) {
+        if (!isset($this->elements[$index])) {
             throw new InvalidArgumentException(sprintf('There is no element at index "%d".', $index));
         }
 

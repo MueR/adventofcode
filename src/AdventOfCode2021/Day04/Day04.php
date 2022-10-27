@@ -70,7 +70,13 @@ class Day04 extends AbstractSolver
 
     protected function getRemainingNumberScore($card): int
     {
-        return array_sum(array_map(static fn (array $line) => array_sum(array_filter($line, static fn (int $num) => $num >= 0)), $this->cards[$card]));
+        return array_sum(array_map(
+            static fn (array $line) => array_sum(array_filter(
+                $line,
+                static fn (int $num) => $num >= 0
+            )),
+            $this->cards[$card]
+        ));
     }
 
     protected function checkBingo(array $card, int $row, int $col): bool

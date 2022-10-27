@@ -61,15 +61,19 @@ class Day08 extends AbstractSolver
             // 8 is the only one with 7 segments
             '8' => static fn (string $pattern) => strlen($pattern) === 7,
             // 9 is 6 segments, matches segments for 4
-            '9' => fn (string $pattern) => strlen($pattern) === 6 && StringUtil::matchesAll($pattern, $this->signalsPerDigit[4]),
+            '9' => fn (string $pattern) => strlen($pattern) === 6
+                && StringUtil::matchesAll($pattern, $this->signalsPerDigit[4]),
             // 0 is 6 segments, matching 1's segments (9 is already out)
-            '0' => fn (string $pattern) => strlen($pattern) === 6 && StringUtil::matchesAll($pattern, $this->signalsPerDigit[1]),
+            '0' => fn (string $pattern) => strlen($pattern) === 6
+                && StringUtil::matchesAll($pattern, $this->signalsPerDigit[1]),
             // 6 is 6 segments, the only one left
             '6' => static fn (string $pattern) => strlen($pattern) === 6,
             // 3 is 5 segments and matches 1's segments
-            '3' => fn (string $pattern) => strlen($pattern) === 5 && StringUtil::matchesAll($pattern, $this->signalsPerDigit[1]),
+            '3' => fn (string $pattern) => strlen($pattern) === 5
+                && StringUtil::matchesAll($pattern, $this->signalsPerDigit[1]),
             // 5 is 5 segments, and 9 has all the segments of 5
-            '5' =>  fn (string $pattern) => strlen($pattern) === 5 && StringUtil::matchesAll($this->signalsPerDigit[9], $pattern),
+            '5' =>  fn (string $pattern) => strlen($pattern) === 5
+                && StringUtil::matchesAll($this->signalsPerDigit[9], $pattern),
             // 2 is the only one remaining
             '2' => static fn (string $pattern) => true,
         ];

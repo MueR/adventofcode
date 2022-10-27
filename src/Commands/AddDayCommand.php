@@ -28,16 +28,8 @@ class AddDayCommand extends Command
     {
         $this
             ->setDescription('Add day class')
-            ->addOption(
-                name: 'day',
-                shortcut: 'd',
-                mode: InputOption::VALUE_REQUIRED,
-            )
-            ->addOption(
-                name: 'year',
-                shortcut: 'y',
-                mode: InputOption::VALUE_REQUIRED,
-            )
+            ->addOption('day', 'd', mode: InputOption::VALUE_REQUIRED)
+            ->addOption('year', 'y', mode: InputOption::VALUE_REQUIRED)
         ;
     }
 
