@@ -48,10 +48,16 @@ class AddDayCommand extends Command
 
         $year = $year ?? (int) date('Y');
         $class = sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $year, $day, $day);
-        $fileName = dirname(__DIR__) .
+        $fileName = dirname(__DIR__) . '/' .
             str_replace('\\', '/', substr($class, strlen('MueR\\AdventOfCode\\'))) .
             '.php'
         ;
+
+        if (!is_dir(dirname($fileName))) {
+            if (!mkdir($concurrentDirectory = dirname($fileName), true) && !is_dir($concurrentDirectory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            }
+        }
 
         if (class_exists($class)) {
             $output->writeln('Class ' . $class . ' already exists, skipping');
