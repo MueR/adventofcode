@@ -58,8 +58,8 @@ class SolveCommand extends Command
         $this->table = new Table($output);
         $this->table
             ->setStyle('box-double')
-            ->setHeaders(['Day', 'Solution 1', 'Solution 2', 'Memory', 'Runtime (p1)', 'Runtime (p2)'])
-            ->setColumnWidths([3, 20, 20, 14, 14, 14]);
+            ->setHeaders(['Day', 'Solution 1', 'Solution 2', 'Memory', 'Init', 'Runtime (p1)', 'Runtime (p2)'])
+            ->setColumnWidths([3, 20, 20, 14, 14, 14, 14]);
 
         foreach ($days as $day) {
             try {
@@ -99,9 +99,9 @@ class SolveCommand extends Command
         $partOneSolution = $instance->partOne();
         $instance->lap();
         $partTwoSolution = $instance->partTwo();
-        $instance->lap();
+        $stopwatch = $instance->stop();
 
-        $stopwatchData = $instance->stop();
+        [$load, $one, $two] = $stopwatch->getPeriods();
 
         if ($partOneSolution === -1 && $partTwoSolution === -1) {
             return;
@@ -121,15 +121,19 @@ class SolveCommand extends Command
                 ['style' => new TableCellStyle(['align' => 'right', 'fg' => $partTwoSolution ? 'default' : 'red'])]
             ),
             new TableCell(
-                $stopwatchData->getMemory() / 1024 / 1024 . ' MiB',
+                ($stopwatch->getMemory()) / 1024 / 1024 . ' MiB',
                 ['style' => new TableCellStyle(['align' => 'right'])]
             ),
             new TableCell(
-                round($stopwatchData->getPeriods()[1]->getDuration(), 1) . ' ms',
+                $load->getDuration() . ' ms',
                 ['style' => new TableCellStyle(['align' => 'right'])]
             ),
             new TableCell(
-                round($stopwatchData->getPeriods()[2]->getDuration(), 1) . ' ms',
+                round($one->getDuration(), 1) . ' ms',
+                ['style' => new TableCellStyle(['align' => 'right'])]
+            ),
+            new TableCell(
+                round($two->getDuration(), 1) . ' ms',
                 ['style' => new TableCellStyle(['align' => 'right'])]
             ),
         ]);

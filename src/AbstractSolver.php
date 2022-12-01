@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode;
 
-use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
@@ -41,6 +39,17 @@ abstract class AbstractSolver
         return $this->stopwatch->stop($this->ns);
     }
 
+    public function getStopwatch(): Stopwatch
+    {
+        return $this->stopwatch;
+    }
+
+    /** @return StopwatchEvent[] */
+    public function getStopwatchEvents(): array
+    {
+        return $this->stopwatch->getSectionEvents($this->ns);
+    }
+
     public function setTestmode(bool $testMode): self
     {
         $this->test = $testMode;
@@ -72,9 +81,12 @@ abstract class AbstractSolver
         $this->input = explode(PHP_EOL, $this->readText());
     }
 
-    protected function readText(): string
+    protected function readText(?string $filename = null): string
     {
-        $file = __DIR__ . '/' .$this->ns . '/' . ($this->test ? 'test' : 'input') . '.txt';
+        if ($filename === null) {
+            $filename = ($this->test ? 'test' : 'input');
+        }
+        $file = __DIR__ . '/' .$this->ns . '/' . $filename . '.txt';
         if (!file_exists($file)) {
             throw new RuntimeException(sprintf('Input file "%s" does not exist.', $file));
         }
@@ -82,5 +94,18 @@ abstract class AbstractSolver
         $content = file_get_contents($file);
 
         return trim($content);
+    }
+
+    protected function getFile(?string $filename = null)
+    {
+        if ($filename === null) {
+            $filename = ($this->test ? 'test' : 'input');
+        }
+        $file = __DIR__ . '/' .$this->ns . '/' . $filename . '.txt';
+        if (!file_exists($file)) {
+            throw new RuntimeException(sprintf('Input file "%s" does not exist.', $file));
+        }
+
+        return fopen($file, 'rb');
     }
 }

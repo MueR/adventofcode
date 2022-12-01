@@ -3,7 +3,6 @@
  * Part of AdventOfCode 2022
  */
 
-
 declare(strict_types=1);
 
 namespace MueR\AdventOfCode\AdventOfCode2022\Day01;
@@ -18,14 +17,14 @@ use MueR\AdventOfCode\AbstractSolver;
  */
 class Day01 extends AbstractSolver
 {
-    private array $calories;
+    private array $calories = [];
 
     /**
      * Solver method for part 1 of the puzzle.
      *
      * @see https://adventofcode.com/2022/day/1
      */
-    public function partOne() : int
+    public function partOne(): int
     {
         return $this->calories[0];
     }
@@ -35,21 +34,36 @@ class Day01 extends AbstractSolver
      *
      * @see https://adventofcode.com/2022/day/1#part2
      */
-    public function partTwo() : int
+    public function partTwo(): int
     {
-        return array_sum(array_slice($this->calories, 0, 3));
+        return array_sum($this->calories);
     }
 
     protected function parse(): void
     {
-        $elves = array_map(
-            static function ($set) {
-                return array_map(static fn ($line) => (int) $line, explode("\n", $set));
-            },
-            explode("\n\n", $this->readText())
-        );
+        $file = $this->getFile();
 
-        $this->calories = array_map(fn ($items) => array_sum($items), $elves);
+        $min = 0;
+        $calories = 0;
+        while (!feof($file)) {
+            $line = fgets($file);
+
+            if ($line !== PHP_EOL) {
+                $calories += (int) $line;
+                continue;
+            }
+
+            if ($calories > $min) {
+                $l = count($this->calories);
+                if ($l === 3) {
+                    array_pop($this->calories);
+                }
+                $this->calories[] = $calories;
+                rsort($this->calories, SORT_NUMERIC);
+                $min = $this->calories[max(0, $l - 1)];
+            }
+            $calories = 0;
+        }
         rsort($this->calories, SORT_NUMERIC);
     }
 }
