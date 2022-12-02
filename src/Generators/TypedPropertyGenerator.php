@@ -4,13 +4,14 @@ namespace MueR\AdventOfCode\Generators;
 
 use Laminas\Code\Generator\Exception\RuntimeException;
 use Laminas\Code\Generator\PropertyGenerator;
+use Laminas\Code\Generator\TypeGenerator;
 use Laminas\Code\Generator\ValueGenerator;
 use Laminas\Code\Reflection\PropertyReflection;
 use ReflectionClass;
 
 class TypedPropertyGenerator extends PropertyGenerator
 {
-    private ?string $type = null;
+    protected ?TypeGenerator $type = null;
 
     public static function fromReflection(PropertyReflection $reflectionProperty): TypedPropertyGenerator
     {
@@ -75,15 +76,13 @@ class TypedPropertyGenerator extends PropertyGenerator
         return $output . ' = ' . ($defaultValue !== null ? $defaultValue->generate() : 'null;');
     }
 
-    public function getType(): ?string
+    public function getType(): ?TypeGenerator
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(?TypeGenerator $type): void
     {
         $this->type = $type;
-
-        return $this;
     }
 }

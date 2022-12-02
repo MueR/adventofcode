@@ -54,7 +54,10 @@ class AddDayCommand extends Command
         ;
 
         if (!is_dir(dirname($fileName))) {
-            if (!mkdir($concurrentDirectory = dirname($fileName), true) && !is_dir($concurrentDirectory)) {
+            if (
+                !mkdir($concurrentDirectory = dirname($fileName), 0755, recursive: true) &&
+                !is_dir($concurrentDirectory)
+            ) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
             }
         }
