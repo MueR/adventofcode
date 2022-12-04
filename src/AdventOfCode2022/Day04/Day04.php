@@ -46,12 +46,7 @@ class Day04 extends AbstractSolver
     {
         $partialOverlap = 0;
         foreach ($this->input as [$elfOne, $elfTwo]) {
-            if (
-                ($elfOne[0] >= $elfTwo[0] && $elfOne[0] <= $elfTwo[1]) ||
-                ($elfOne[1] >= $elfTwo[0] && $elfOne[1] <= $elfTwo[1]) ||
-                ($elfTwo[0] >= $elfOne[0] && $elfTwo[0] <= $elfOne[1]) ||
-                ($elfTwo[1] >= $elfOne[0] && $elfTwo[1] <= $elfOne[1])
-            ) {
+            if ($elfOne[0] <= $elfTwo[1] && $elfTwo[0] <= $elfOne[1]) {
                 $partialOverlap++;
             }
         }
