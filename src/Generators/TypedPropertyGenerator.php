@@ -30,7 +30,6 @@ class TypedPropertyGenerator extends PropertyGenerator
     {
         $name = $this->getName();
         $defaultValue = $this->getDefaultValue();
-        $self = new ReflectionClass($this);
 
         $output = '';
 

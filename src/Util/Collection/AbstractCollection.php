@@ -43,7 +43,7 @@ abstract class AbstractCollection
     {
         $self = $this;
 
-        return new LazyOption(function() use ($callable, $self) {
+        return new LazyOption(function () use ($callable, $self) {
             foreach ($self as $element) {
                 if ($callable($element) === true) {
                     return new Some($element);

@@ -99,7 +99,7 @@ interface MapInterface extends CollectionInterface
     /**
      * Returns a new sequence by omitting elements from the beginning for as long as the callable returns true.
      *
-     * @param callable $callable Receives the element to drop as first argument, and returns true (drop), or false (stop).
+     * @param callable $callable Receives the element to drop as first argument, returns true (drop), or false (stop).
      */
     public function dropWhile(callable $callable): MapInterface;
 

@@ -8,6 +8,9 @@ class Cube
     {
     }
 
+    /**
+     * @return int[]
+     */
     public function getCoordinates(): array
     {
         return [$this->x, $this->y, $this->z];

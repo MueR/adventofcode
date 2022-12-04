@@ -143,7 +143,7 @@ abstract class Option implements IteratorAggregate
             /** @var array<int, mixed> */
             $args = func_get_args();
 
-            $reduced_args = array_reduce(
+            $reducedArgs = array_reduce(
                 $args,
                 static function (bool $status, self $o) {
                     return $o->isEmpty() ? true : $status;
@@ -151,7 +151,7 @@ abstract class Option implements IteratorAggregate
                 false
             );
             // if at least one parameter is empty, return None
-            if ($reduced_args) {
+            if ($reducedArgs) {
                 return None::create();
             }
 

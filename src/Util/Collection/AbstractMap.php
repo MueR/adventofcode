@@ -31,6 +31,7 @@ use MueR\AdventOfCode\Util\PhpOption\Some;
 
 abstract class AbstractMap extends AbstractCollection implements IteratorAggregate, MapInterface
 {
+    private const INVALID_NUMBER_ERROR = 'The number must be greater than 0, but got %d.';
     protected array $elements;
 
     public function __construct(array $elements = [])
@@ -221,7 +222,7 @@ abstract class AbstractMap extends AbstractCollection implements IteratorAggrega
     public function drop(int $number): MapInterface
     {
         if ($number <= 0) {
-            throw new InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
+            throw new InvalidArgumentException(sprintf(self::INVALID_NUMBER_ERROR, $number));
         }
 
         return $this->createNew(array_slice($this->elements, $number, null, true));
@@ -230,7 +231,7 @@ abstract class AbstractMap extends AbstractCollection implements IteratorAggrega
     public function dropRight(int $number): MapInterface
     {
         if ($number <= 0) {
-            throw new InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
+            throw new InvalidArgumentException(sprintf(self::INVALID_NUMBER_ERROR, $number));
         }
 
         return $this->createNew(array_slice($this->elements, 0, -1 * $number, true));
@@ -239,7 +240,7 @@ abstract class AbstractMap extends AbstractCollection implements IteratorAggrega
     public function take(int $number): MapInterface
     {
         if ($number <= 0) {
-            throw new InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
+            throw new InvalidArgumentException(sprintf(self::INVALID_NUMBER_ERROR, $number));
         }
 
         return $this->createNew(array_slice($this->elements, 0, $number, true));

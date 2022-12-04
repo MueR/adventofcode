@@ -62,37 +62,35 @@ class AddDayCommand extends Command
             }
         }
 
-        if (class_exists($class)) {
+        if (!class_exists($class)) {
             $output->writeln('Class ' . $class . ' already exists, skipping');
-            $this->createInputFiles($fileName);
+        } else {
+            $this->docBlockUrl = sprintf('https://adventofcode.com/%d/day/%d', $year, $day);
 
-            return Command::SUCCESS;
+            $this->generateClass($class, $day);
+            $this->generateMethod(1);
+            $this->generateMethod(2);
+
+            $fileGenerator = new FileGenerator();
+            $fileGenerator
+                ->setDeclares([DeclareStatement::strictTypes(1)])
+                ->setDocBlock((new DocBlockGenerator('Part of AdventOfCode ' . $year)))
+                ->setClass($this->generator)
+                ->setNamespace(substr($class, 0, strrpos($class, '\\')))
+                ->setUses([AbstractSolver::class])
+            ;
+
+            $fileContent = $fileGenerator->generate();
+
+            if (!file_put_contents($fileName, $fileContent)) {
+                $output->writeln(sprintf('<error>Could not write file %s.</error>', $fileName));
+
+                return Command::FAILURE;
+            }
+
+            $output->writeln(sprintf('<fg=green>✔</> Class %s created.', $fileName));
         }
 
-        $this->docBlockUrl = sprintf('https://adventofcode.com/%d/day/%d', $year, $day);
-
-        $this->generateClass($class, $day);
-        $this->generateMethod(1);
-        $this->generateMethod(2);
-
-        $fileGenerator = new FileGenerator();
-        $fileGenerator
-            ->setDeclares([DeclareStatement::strictTypes(1)])
-            ->setDocBlock((new DocBlockGenerator('Part of AdventOfCode ' . $year)))
-            ->setClass($this->generator)
-            ->setNamespace(substr($class, 0, strrpos($class, '\\')))
-            ->setUses([AbstractSolver::class])
-        ;
-
-        $fileContent = $fileGenerator->generate();
-
-        if (!file_put_contents($fileName, $fileContent)) {
-            $output->writeln(sprintf('<error>Could not write file %s.</error>', $fileName));
-
-            return Command::FAILURE;
-        }
-
-        $output->writeln(sprintf('<fg=green>✔</> Class %s created.', $fileName));
         $this->createInputFiles($fileName);
 
         return Command::SUCCESS;

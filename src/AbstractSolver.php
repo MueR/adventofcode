@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode;
 
+use MueR\AdventOfCode\Exception\InputFileNotFoundException;
 use RuntimeException;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
@@ -70,7 +71,7 @@ abstract class AbstractSolver
     {
         $file = __DIR__ . '/' .$this->ns . '/' . ($this->test ? 'test' : 'input') . '.php';
         if (!file_exists($file)) {
-            throw new RuntimeException(sprintf('Input file "%s" does not exist.', $file));
+            throw new InputFileNotFoundException($file);
         }
 
         return require $file;
@@ -88,7 +89,7 @@ abstract class AbstractSolver
         }
         $file = __DIR__ . '/' .$this->ns . '/' . $filename . '.txt';
         if (!file_exists($file)) {
-            throw new RuntimeException(sprintf('Input file "%s" does not exist.', $file));
+            throw new InputFileNotFoundException($file);
         }
 
         $content = file_get_contents($file);
@@ -103,7 +104,7 @@ abstract class AbstractSolver
         }
         $file = __DIR__ . '/' .$this->ns . '/' . $filename . '.txt';
         if (!file_exists($file)) {
-            throw new RuntimeException(sprintf('Input file "%s" does not exist.', $file));
+            throw new InputFileNotFoundException($file);
         }
 
         return fopen($file, 'rb');

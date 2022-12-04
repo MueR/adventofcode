@@ -20,7 +20,12 @@ class Day17 extends AbstractSolver
     public function partOne() : int
     {
         foreach (range(1, $this->target['x'][1] + 1) as $targetX) {
-            foreach (range($this->target['y'][0], -$this->target['y'][1] + ($this->target['y'][1] - $this->target['y'][0])) as $targetY) {
+            foreach (
+                range(
+                    $this->target['y'][0],
+                    -$this->target['y'][1] + ($this->target['y'][1] - $this->target['y'][0])
+                 ) as $targetY
+            ) {
                 $this->step($targetX, $targetY);
             }
         }

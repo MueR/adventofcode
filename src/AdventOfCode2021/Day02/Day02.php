@@ -51,6 +51,7 @@ class Day02 extends AbstractSolver
                 case 'down':
                     $this->aim += $units;
                     break;
+                default: // Do nothing.
             }
         }
     }
