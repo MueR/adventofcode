@@ -116,7 +116,6 @@ class AddDayCommand extends Command
         }
 
         $docBlock = new DocBlockGenerator("Day $day puzzle.");
-        $docBlock->setTag(new PropertyTag('input', 'array{int}'));
         $docBlock->setTag(new GenericTag('see', $this->docBlockUrl));
         $this->generator->setDocBlock($docBlock);
     }
