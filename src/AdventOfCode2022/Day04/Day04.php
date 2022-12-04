@@ -13,7 +13,6 @@ use MueR\AdventOfCode\AbstractSolver;
 /**
  * Day 4 puzzle.
  *
- * @property array{int} $input
  * @see https://adventofcode.com/2022/day/4
  */
 class Day04 extends AbstractSolver
@@ -25,16 +24,12 @@ class Day04 extends AbstractSolver
      */
     public function partOne(): int
     {
-        $fullOverlap = 0;
-        foreach ($this->input as $index => [$elfOne, $elfTwo]) {
-            if (
-                ($elfOne[0] >= $elfTwo[0] && $elfOne[1] <= $elfTwo[1]) ||
-                ($elfTwo[0] >= $elfOne[0] && $elfTwo[1] <= $elfOne[1])
-            ) {
-                $fullOverlap++;
-            }
-        }
-        return $fullOverlap;
+        return count(array_filter(
+            $this->input,
+            static fn (array $elves) =>
+                ($elves[0][0] >= $elves[1][0] && $elves[0][1] <= $elves[1][1]) ||
+                ($elves[1][0] >= $elves[0][0] && $elves[1][1] <= $elves[0][1])
+        ));
     }
 
     /**
@@ -44,13 +39,10 @@ class Day04 extends AbstractSolver
      */
     public function partTwo(): int
     {
-        $partialOverlap = 0;
-        foreach ($this->input as [$elfOne, $elfTwo]) {
-            if ($elfOne[0] <= $elfTwo[1] && $elfTwo[0] <= $elfOne[1]) {
-                $partialOverlap++;
-            }
-        }
-        return $partialOverlap;
+        return count(array_filter(
+            $this->input,
+            static fn (array $elves) => $elves[0][0] <= $elves[1][1] && $elves[1][0] <= $elves[0][1]
+        ));
     }
 
     protected function parse(): void
@@ -58,8 +50,9 @@ class Day04 extends AbstractSolver
         $this->input = array_map(
             static function (string $line) {
                 [$elfOne, $elfTwo] = explode(',', $line);
-                $elfOne = array_map(static fn ($number) => (int)$number, explode('-', $elfOne));
-                $elfTwo = array_map(static fn ($number) => (int)$number, explode('-', $elfTwo));
+                $elfOne = array_map(static fn ($number) => (int) $number, explode('-', $elfOne));
+                $elfTwo = array_map(static fn ($number) => (int) $number, explode('-', $elfTwo));
+
                 return [$elfOne, $elfTwo];
             },
             explode("\n", $this->readText())
