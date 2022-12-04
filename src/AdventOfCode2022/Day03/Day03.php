@@ -72,7 +72,6 @@ class Day03 extends AbstractSolver
     {
         $code = ord($item);
         if ($code >= ord('a')) {
-            // lowercase
             return $code - ord('a') + 1;
         }
         return $code - ord('A') + 27;

@@ -62,7 +62,7 @@ class AddDayCommand extends Command
             }
         }
 
-        if (!class_exists($class)) {
+        if (class_exists($class)) {
             $output->writeln('Class ' . $class . ' already exists, skipping');
         } else {
             $this->docBlockUrl = sprintf('https://adventofcode.com/%d/day/%d', $year, $day);
