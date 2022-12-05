@@ -27,7 +27,7 @@ abstract class AbstractSolver
         $this->parse();
     }
 
-    abstract public function partOne(): int|float;
+    abstract public function partOne(): int|float|string;
     abstract public function partTwo(): int|float|string;
 
     public function lap(): StopwatchEvent
@@ -82,12 +82,17 @@ abstract class AbstractSolver
         $this->input = explode(PHP_EOL, $this->readText());
     }
 
-    protected function readText(?string $filename = null): string
+    protected function getInputFileName(?string $filename = null): string
     {
         if ($filename === null) {
             $filename = ($this->test ? 'test' : 'input');
         }
-        $file = __DIR__ . '/' .$this->ns . '/' . $filename . '.txt';
+        return __DIR__ . '/' .$this->ns . '/' . $filename . '.txt';
+    }
+
+    protected function readText(?string $filename = null): string
+    {
+        $file = $this->getInputFileName($filename);
         if (!file_exists($file)) {
             throw new InputFileNotFoundException($file);
         }
@@ -99,10 +104,7 @@ abstract class AbstractSolver
 
     protected function getFile(?string $filename = null)
     {
-        if ($filename === null) {
-            $filename = ($this->test ? 'test' : 'input');
-        }
-        $file = __DIR__ . '/' .$this->ns . '/' . $filename . '.txt';
+        $file = $this->getInputFileName($filename);
         if (!file_exists($file)) {
             throw new InputFileNotFoundException($file);
         }
