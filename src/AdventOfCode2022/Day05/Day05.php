@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace MueR\AdventOfCode\AdventOfCode2022\Day05;
 
 use MueR\AdventOfCode\AbstractSolver;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 /**
  * Day 5 puzzle.
