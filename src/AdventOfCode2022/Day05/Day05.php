@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace MueR\AdventOfCode\AdventOfCode2022\Day05;
 
 use MueR\AdventOfCode\AbstractSolver;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 /**
  * Day 5 puzzle.
@@ -29,11 +30,10 @@ class Day05 extends AbstractSolver
     public function partOne(): string
     {
         $stacks = $this->stacks;
+
         foreach ($this->moves as $move) {
-            for ($i = 0; $i < $move['move']; $i++) {
-                $item = array_pop($stacks[$move['from']]);
-                $stacks[$move['to']][] = $item;
-            }
+            $stacks[$move['to']] .= strrev(substr($stacks[$move['from']], -$move['move']));
+            $stacks[$move['from']] = substr($stacks[$move['from']], 0, -$move['move']);
         }
 
         return $this->getResult($stacks);
@@ -47,14 +47,8 @@ class Day05 extends AbstractSolver
     public function partTwo(): string
     {
         foreach ($this->moves as $move) {
-            $stack = [];
-            for ($i = 0; $i < $move['move']; $i++) {
-                $stack[] = array_pop($this->stacks[$move['from']]);
-            }
-            $stack = array_reverse($stack);
-            foreach ($stack as $crate) {
-                $this->stacks[$move['to']][] = $crate;
-            }
+            $this->stacks[$move['to']] .= substr($this->stacks[$move['from']], -$move['move']);;
+            $this->stacks[$move['from']] = substr($this->stacks[$move['from']], 0, -$move['move']);
         }
 
         return $this->getResult($this->stacks);
@@ -70,16 +64,15 @@ class Day05 extends AbstractSolver
             foreach ($set as $i => $item) {
                 $index = $i + 1;
                 if (!array_key_exists($index, $this->stacks)) {
-                    $this->stacks[$index] = [];
+                    $this->stacks[$index] = '';
                 }
                 $item = trim($item, '[] ');
-                if ($item !== '') {
-                    $this->stacks[$index][] = $item;
-                }
+                $this->stacks[$index] .= $item;
             }
         }
 
-        $moves = explode("\n", $moves);
+
+        $moves = explode("\n", trim($moves));
         foreach ($moves as $index => $move) {
             $actions = explode(' ', $move);
             for ($i = 0, $max = count($actions); $i < $max; $i += 2) {
@@ -92,7 +85,7 @@ class Day05 extends AbstractSolver
     {
         $result = '';
         foreach ($stacks as $stack) {
-            $result .= $stack[count($stack) - 1];
+            $result .= substr($stack, -1);
         }
 
         return $result;
