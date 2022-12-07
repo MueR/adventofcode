@@ -8,14 +8,10 @@ class Directory
 
     private int $cumulativeSize = 0;
 
-    private array $files = [];
-
     /** @var Directory[] */
     private array $children = [];
 
     private int $size = 0;
-
-    private int $depth = 0;
 
     public function __construct(
         private string $name,
@@ -24,7 +20,6 @@ class Directory
         $this->fullPath = $this->name . '/';
         if ($this->parent) {
             $this->fullPath = $this->parent->getFullPath() . $this->fullPath;
-            $this->depth = $this->parent->getDepth() + 1;
         }
     }
 
@@ -43,34 +38,14 @@ class Directory
         return $this->parent;
     }
 
-    public function getChildren(): array
-    {
-        return $this->children;
-    }
-
     public function getChild(string $name): Directory
     {
         return $this->children[$name];
     }
 
-    public function getSize(): int
-    {
-        return $this->size;
-    }
-
     public function getCumulativeSize(): int
     {
         return $this->cumulativeSize;
-    }
-
-    public function getFiles(): array
-    {
-        return $this->files;
-    }
-
-    public function getDepth(): int
-    {
-        return $this->depth;
     }
 
     public function parseDir(array $content): void
@@ -82,7 +57,6 @@ class Directory
                 $this->children[$name] = $dir;
                 continue;
             }
-            $this->files[$name] = ['name' => $name, 'size' => $size];
             $this->size += (int) $size;
         }
         $this->addToCumulativeSize($this->size);
@@ -100,10 +74,5 @@ class Directory
         foreach ($this->children as $child) {
             $child->flatten($flat);
         }
-    }
-
-    public function __toString()
-    {
-        return sprintf("[DIR] %-20s %-20s %s\n", $this->getCumulativeSize(), $this->getSize(), $this->getName());
     }
 }
