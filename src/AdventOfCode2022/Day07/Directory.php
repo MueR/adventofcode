@@ -4,7 +4,7 @@ namespace MueR\AdventOfCode\AdventOfCode2022\Day07;
 
 class Directory
 {
-    private string $fullPath;
+    private readonly string $fullPath;
 
     private int $cumulativeSize = 0;
 
@@ -14,18 +14,10 @@ class Directory
     private int $size = 0;
 
     public function __construct(
-        private string $name,
-        private ?self  $parent = null,
+        private readonly string $name,
+        private readonly ?self $parent = null,
     ) {
-        $this->fullPath = $this->name . '/';
-        if ($this->parent) {
-            $this->fullPath = $this->parent->getFullPath() . $this->fullPath;
-        }
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
+        $this->fullPath = ($this->parent ? $this->parent->getFullPath() : '') . $this->name . '/';
     }
 
     public function getFullPath(): string
