@@ -61,7 +61,6 @@ class Day08 extends AbstractSolver
 
     protected function parse(): void
     {
-        // $this->test = true;
         $this->trees = array_map(
             static fn (string $line) => array_map(static fn (string $tree) => (int) $tree, str_split($line)),
             explode(PHP_EOL, $this->readText())
@@ -104,7 +103,7 @@ class Day08 extends AbstractSolver
         $bottom = array_slice($vertical, $y + 1);
 
         $scores = [];
-        foreach ([$top, $left, $bottom, $right] as $dir => $set) {
+        foreach ([$top, $left, $bottom, $right] as $set) {
             $trees = count($set);
             $score = 0;
             for ($i = 0; $i < $trees; $i++) {
