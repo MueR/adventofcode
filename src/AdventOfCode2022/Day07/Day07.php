@@ -47,8 +47,7 @@ class Day07 extends AbstractSolver
     protected function parse(): void
     {
         $input = explode('$ ', $this->readText());
-        $currentDir = null;
-        $this->root = new Directory('');
+        $this->root = $currentDir = new Directory('');
         foreach ($input as $section) {
             if ($section === '') {
                 continue;
@@ -56,25 +55,17 @@ class Day07 extends AbstractSolver
             $data = explode(PHP_EOL, trim($section));
             $command = array_shift($data);
 
-            switch (substr($command, 0, 2)) {
-                case 'cd':
-                    $dir = substr($command, 3);
-                    switch ($dir) {
-                        case '/':
-                            $currentDir = $this->root;
-                            break;
-                        case '..':
-                            $currentDir = $currentDir->getParent() ?? $this->root;
-                            break;
-                        default:
-                            $currentDir = $currentDir->getChild($dir);
-                            break;
-                    }
-                    break;
-                case 'ls':
-                    $currentDir->parseDir($data);
-                    break;
+            if (str_starts_with($command, 'cd')) {
+                $dir = substr($command, 3);
+                $currentDir = match ($dir) {
+                    '/' => $this->root,
+                    '..' => $currentDir->getParent() ?? $this->root,
+                    default => $currentDir->getChild($dir),
+                };
+                continue;
             }
+
+            $currentDir->parseDir($data);
         }
         $this->root->flatten($this->flatFs);
     }
