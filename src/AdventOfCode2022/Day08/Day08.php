@@ -47,12 +47,21 @@ class Day08 extends AbstractSolver
      */
     public function partTwo() : int
     {
-        return -1;
+        $yMax = count($this->trees);
+        $xMax = count($this->trees[0]);
+        $max = 0;
+        for ($y = 0; $y < $yMax; $y++) {
+            for ($x = 0; $x < $xMax; $x++) {
+                $max = max($max, $this->getSceneScore($x, $y));
+            }
+        }
+
+        return $max;
     }
 
     protected function parse(): void
     {
-        $this->test = true;
+        // $this->test = true;
         $this->trees = array_map(
             static fn (string $line) => array_map(static fn (string $tree) => (int) $tree, str_split($line)),
             explode(PHP_EOL, $this->readText())
@@ -61,28 +70,58 @@ class Day08 extends AbstractSolver
 
     private function isVisible(int $x, int $y): bool
     {
-        $horziontal = $this->trees[$y];
+        $horizontal = $this->trees[$y];
         $vertical = [];
         foreach ($this->trees as $i => $row) {
             $vertical[] = $this->trees[$i][$x];
         }
-        $left = array_slice($horziontal, 0, $x);
-        $right = array_slice($horziontal, $x + 1);
+        $left = array_slice($horizontal, 0, $x);
+        $right = array_slice($horizontal, $x + 1);
         $top = array_slice($vertical, 0, $y);
         $bottom = array_slice($vertical, $y + 1);
 
         foreach ([$left, $right, $top, $bottom] as $set) {
             $result = count(array_filter(
                 $set,
-                function (int $height) use ($x, $y) {
-                    return $height >= $this->trees[$y][$x];
-                }
+                fn (int $height) => $height >= $this->trees[$y][$x]
             ));
             if ($result === 0) {
                 return true;
             }
         }
         return false;
+    }
+
+    private function getSceneScore(int $x, int $y): int
+    {
+        $vertical = [];
+        foreach ($this->trees as $i => $row) {
+            $vertical[] = $this->trees[$i][$x];
+        }
+        $left = array_reverse(array_slice($this->trees[$y], 0, $x));
+        $right = array_slice($this->trees[$y], $x + 1);
+        $top = array_reverse(array_slice($vertical, 0, $y));
+        $bottom = array_slice($vertical, $y + 1);
+
+        $scores = [];
+        foreach ([$top, $left, $bottom, $right] as $dir => $set) {
+            $trees = count($set);
+            $score = 0;
+            for ($i = 0; $i < $trees; $i++) {
+                if ($set[$i] < $this->trees[$y][$x]) {
+                    $score++;
+                }
+
+                if ($set[$i] >= $this->trees[$y][$x]) {
+                    $score++;
+                    break;
+                }
+            }
+            $scores[] = $score;
+        }
+        $this->scene[$y][$x] = array_product($scores);
+
+        return $this->scene[$y][$x];
     }
 }
 
