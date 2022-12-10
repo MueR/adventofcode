@@ -17,16 +17,21 @@ use MueR\AdventOfCode\AbstractSolver;
  */
 class Day10 extends AbstractSolver
 {
-    private int $cycle = 0;
     private array $strength = [];
     private string $crt = '';
+
+    public function __construct(bool $test = false)
+    {
+        $this->crt = str_repeat(' ', 240);
+        parent::__construct($test);
+    }
 
     /**
      * Solver method for part 1 of the puzzle.
      *
      * @see https://adventofcode.com/2022/day/10
      */
-    public function partOne() : int
+    public function partOne(): int
     {
         return array_sum(array_filter($this->strength, static fn (int $k) => $k % 40 === 20, ARRAY_FILTER_USE_KEY));
     }
@@ -36,15 +41,12 @@ class Day10 extends AbstractSolver
      *
      * @see https://adventofcode.com/2022/day/10#part2
      */
-    public function partTwo() : string
+    public function partTwo(): string
     {
-        // Uncomment this to display output
-        /*
-        foreach (str_split($this->crt) as $i => $char) {
-            print ($i % 40 === 0 ? "\n" : '') . str_replace('#', '█', $char);
-        }
-        print "\n\n";
-        */
+        /**
+         * Uncomment to output.
+         * print implode(PHP_EOL, str_split($this->crt, 40)) . "\n\n";
+         */
 
         return 'ZUPRFECL';
     }
@@ -52,19 +54,23 @@ class Day10 extends AbstractSolver
     protected function parse(): void
     {
         $operations = explode(PHP_EOL, $this->readText());
-        $strength = 1;
+        $x = 1;
         $cycle = 0;
-        $this->crt = str_repeat('.', 240);
         foreach ($operations as $operation) {
-            $this->crtOutput($cycle + 1, $strength);
-            $this->strength[++$cycle] = $strength * $cycle;
+            $x = $this->cycle(++$cycle, $x);
             if ($operation === 'noop') {
                 continue;
             }
-            $this->crtOutput($cycle + 1, $strength);
-            $this->strength[++$cycle] = $strength * $cycle;
-            $strength += (int) substr($operation, 5);
+            $x = $this->cycle(++$cycle, $x, (int) substr($operation, 5));
         }
+    }
+
+    protected function cycle(int $cycle, int $x, int $modifier = 0): int
+    {
+        $this->crtOutput($cycle, $x);
+        $this->strength[$cycle] = $x * $cycle;
+
+        return $x + $modifier;
     }
 
     protected function crtOutput(int $cycle, int $x): void

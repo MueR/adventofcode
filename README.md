@@ -9,6 +9,15 @@ rm -rf "src/AdventOfCode$YEAR/Day*/*"
 bin/console add:year -y $YEAR
 ```
 
+## Recommended PECL packages
+Install the [Data Structures](https://www.php.net/manual/en/book.ds.php) package from PECL.
+These provide a massive performance increase over the composer package `php-ds/php-ds`.
+```shell
+# For Debian/Ubuntu:
+sudo apt install php-dev php-pear build-essential
+sudo pecl install ds
+```
+
 ## Usage
 ```shell
 bin/console [solve] [-y|--year YEAR] [-d|--day DAY] [-t|--test]
@@ -17,9 +26,9 @@ bin/console [solve] [-y|--year YEAR] [-d|--day DAY] [-t|--test]
 ### Optional command line parameters
 ```text
 Option      Default         Description
---test      false           Run your code against test values, rather than your puzzle input.
---year      current year    Run year X.
---day       all days        Run day X, default value is all days.
+-t,--test   false           Run your code against test values, rather than your puzzle input.
+-y,--year   current year    Run year X.
+-d,--day    all days        Run day X, default value is all days.
                             Note: only days that return actual values will be displayed.
 ```
 

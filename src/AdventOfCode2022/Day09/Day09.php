@@ -26,6 +26,7 @@ class Day09 extends AbstractSolver
     private array $rope;
     /** @var Set<Point> */
     private Set $visitedOne;
+    /** @var Set<Point> */
     private Set $visitedTwo;
     private const ROPE_LENGTH = 10;
 
@@ -34,7 +35,7 @@ class Day09 extends AbstractSolver
      *
      * @see https://adventofcode.com/2022/day/9
      */
-    public function partOne() : int
+    public function partOne(): int
     {
         return $this->visitedOne->count();
     }
@@ -44,21 +45,20 @@ class Day09 extends AbstractSolver
      *
      * @see https://adventofcode.com/2022/day/9#part2
      */
-    public function partTwo() : int
+    public function partTwo(): int
     {
         return $this->visitedTwo->count();
     }
 
     protected function parse(): void
     {
+        $this->rope = array_fill(0, self::ROPE_LENGTH, new Point(0, 0));
+        $this->visitedOne = new Set([(string) new Point(0, 0)]);
+        $this->visitedTwo = new Set([(string) new Point(0, 0)]);
         $this->steps = array_map(
             static fn (string $line) => Move::fromString($line),
             explode(PHP_EOL, $this->readText())
         );
-
-        $this->rope = array_fill(0, self::ROPE_LENGTH, new Point(0, 0));
-        $this->visitedOne = new Set([(string) new Point(0, 0)]);
-        $this->visitedTwo = new Set([(string) new Point(0, 0)]);
         foreach ($this->steps as $step) {
             $this->move($step);
         }
@@ -82,6 +82,7 @@ class Day09 extends AbstractSolver
     {
         $x = Math::sign($pulling->x - $pulled->x);
         $y = Math::sign($pulling->y - $pulled->y);
+
         return $pulled->translate($x, $y);
     }
 }
