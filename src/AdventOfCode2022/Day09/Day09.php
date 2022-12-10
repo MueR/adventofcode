@@ -36,9 +36,6 @@ class Day09 extends AbstractSolver
      */
     public function partOne() : int
     {
-        foreach ($this->steps as $step) {
-            $this->move($step);
-        }
         return $this->visitedOne->count();
     }
 
@@ -62,6 +59,9 @@ class Day09 extends AbstractSolver
         $this->rope = array_fill(0, self::ROPE_LENGTH, new Point(0, 0));
         $this->visitedOne = new Set([(string) new Point(0, 0)]);
         $this->visitedTwo = new Set([(string) new Point(0, 0)]);
+        foreach ($this->steps as $step) {
+            $this->move($step);
+        }
     }
 
     private function move(Move $move): void
