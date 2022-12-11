@@ -26,7 +26,7 @@ class Day11 extends AbstractSolver
      *
      * @see https://adventofcode.com/2022/day/11
      */
-    public function partOne() : int
+    public function partOne(): int
     {
         for ($i = 1; $i <= 20; $i++) {
             foreach ($this->monkeys as $monkey) {
@@ -52,7 +52,7 @@ class Day11 extends AbstractSolver
      *
      * @see https://adventofcode.com/2022/day/11#part2
      */
-    public function partTwo() : int
+    public function partTwo(): int
     {
         $this->parse();
         $divTest = array_reduce(
