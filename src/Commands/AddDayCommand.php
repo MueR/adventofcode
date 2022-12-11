@@ -6,12 +6,12 @@ use Laminas\Code\DeclareStatement;
 use Laminas\Code\Generator\AbstractMemberGenerator;
 use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\DocBlock\Tag\GenericTag;
-use Laminas\Code\Generator\DocBlock\Tag\PropertyTag;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Generator\FileGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use MueR\AdventOfCode\AbstractSolver;
 use MueR\AdventOfCode\AdventOfCode;
+use MueR\AdventOfCode\Exception\IoException;
 use MueR\AdventOfCode\Generators\TypedPropertyGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,13 +53,12 @@ class AddDayCommand extends Command
             '.php'
         ;
 
-        if (!is_dir(dirname($fileName))) {
-            if (
-                !mkdir($concurrentDirectory = dirname($fileName), 0755, recursive: true) &&
-                !is_dir($concurrentDirectory)
-            ) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
-            }
+        if (
+            !is_dir(dirname($fileName))
+            && !mkdir($concurrentDirectory = dirname($fileName), 0755, recursive: true)
+            && !is_dir($concurrentDirectory)
+        ) {
+            throw new IoException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
 
         if (class_exists($class)) {

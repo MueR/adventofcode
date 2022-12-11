@@ -104,14 +104,13 @@ class Day08 extends AbstractSolver
 
         $scores = [];
         foreach ([$top, $left, $bottom, $right] as $set) {
-            $trees = count($set);
             $score = 0;
-            for ($i = 0; $i < $trees; $i++) {
-                if ($set[$i] < $this->trees[$y][$x]) {
+            foreach ($set as $tree) {
+                if ($tree < $this->trees[$y][$x]) {
                     $score++;
                 }
 
-                if ($set[$i] >= $this->trees[$y][$x]) {
+                if ($tree >= $this->trees[$y][$x]) {
                     $score++;
                     break;
                 }

@@ -18,7 +18,7 @@ use MueR\AdventOfCode\AbstractSolver;
 class Day10 extends AbstractSolver
 {
     private array $strength = [];
-    private string $crt = '';
+    private string $crt;
 
     public function __construct(bool $test = false)
     {

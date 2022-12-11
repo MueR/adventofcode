@@ -65,7 +65,10 @@ class Day02 extends AbstractSolver
 
     protected function parse(): void
     {
-        $this->turns = array_map(fn ($line) => explode(' ', $line), explode("\n", $this->readText()));
+        $this->turns = array_map(
+            static fn ($line) => explode(' ', $line),
+            explode("\n", $this->readText())
+        );
     }
 
     private function play(string $elf, string $you): int

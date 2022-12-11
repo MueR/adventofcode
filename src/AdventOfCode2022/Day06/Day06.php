@@ -48,6 +48,8 @@ class Day06 extends AbstractSolver
                 return $i + 1;
             }
         }
+
+        throw new \LogicException('Could not find a unique number of characters.');
     }
 
     protected function parse(): void

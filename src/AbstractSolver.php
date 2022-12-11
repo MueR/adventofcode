@@ -67,16 +67,6 @@ abstract class AbstractSolver
         return $this->input;
     }
 
-    protected function readPhpInput()
-    {
-        $file = __DIR__ . '/' .$this->ns . '/' . ($this->test ? 'test' : 'input') . '.php';
-        if (!file_exists($file)) {
-            throw new InputFileNotFoundException($file);
-        }
-
-        return require $file;
-    }
-
     protected function parse(): void
     {
         $this->input = explode(PHP_EOL, $this->readText());

@@ -3,7 +3,7 @@
 namespace MueR\AdventOfCode\Commands;
 
 use InvalidArgumentException;
-use RuntimeException;
+use MueR\AdventOfCode\Exception\IoException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,7 +35,7 @@ class AddYearCommand extends Command
         for ($i = 1; $i < 26; $i++) {
             $directory = sprintf('%s/AdventOfCode%4d/Day%02d', $srcPath, $year, $i);
             if (!@mkdir($directory, 0777, true) && !is_dir($directory)) {
-                throw new RuntimeException(sprintf('Directory "%s" was not created', $directory));
+                throw new IoException(sprintf('Directory "%s" was not created', $directory));
             }
 
             $addDayCommand->run(new ArrayInput(['--day' => $i, '--year' => $year]), $output);

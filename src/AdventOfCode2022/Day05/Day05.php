@@ -46,7 +46,7 @@ class Day05 extends AbstractSolver
     public function partTwo(): string
     {
         foreach ($this->moves as $move) {
-            $this->stacks[$move['to']] .= substr($this->stacks[$move['from']], -$move['move']);;
+            $this->stacks[$move['to']] .= substr($this->stacks[$move['from']], -$move['move']);
             $this->stacks[$move['from']] = substr($this->stacks[$move['from']], 0, -$move['move']);
         }
 

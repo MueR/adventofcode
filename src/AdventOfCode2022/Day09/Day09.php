@@ -21,7 +21,6 @@ use MueR\AdventOfCode\Util\Point;
  */
 class Day09 extends AbstractSolver
 {
-    private array $steps;
     /** @var Point[] */
     private array $rope;
     /** @var Set<Point> */
@@ -55,11 +54,11 @@ class Day09 extends AbstractSolver
         $this->rope = array_fill(0, self::ROPE_LENGTH, new Point(0, 0));
         $this->visitedOne = new Set([(string) new Point(0, 0)]);
         $this->visitedTwo = new Set([(string) new Point(0, 0)]);
-        $this->steps = array_map(
+        $steps = array_map(
             static fn (string $line) => Move::fromString($line),
             explode(PHP_EOL, $this->readText())
         );
-        foreach ($this->steps as $step) {
+        foreach ($steps as $step) {
             $this->move($step);
         }
     }
