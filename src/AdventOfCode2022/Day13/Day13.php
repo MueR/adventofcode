@@ -24,7 +24,7 @@ class Day13 extends AbstractSolver
      *
      * @see https://adventofcode.com/2022/day/13
      */
-    public function partOne() : int
+    public function partOne(): int
     {
         $result = 0;
         foreach ($this->pairs as $i => $lists) {
@@ -41,7 +41,7 @@ class Day13 extends AbstractSolver
      *
      * @see https://adventofcode.com/2022/day/13#part2
      */
-    public function partTwo() : int
+    public function partTwo(): int
     {
         $targetOne = [[2]];
         $targetTwo = [[6]];
@@ -52,7 +52,8 @@ class Day13 extends AbstractSolver
         }
         usort($items, [$this, 'compareList']);
         $items = array_reverse($items);
-        $found = [array_search($targetOne, $items)+1, array_search($targetTwo, $items)+1];
+        $found = [array_search($targetOne, $items) + 1, array_search($targetTwo, $items) + 1];
+
         return array_product($found);
     }
 
@@ -69,23 +70,25 @@ class Day13 extends AbstractSolver
         }
     }
 
-    private function compareList(array|int $left, array|int $right, int $depth = 0): int
+    private function compareList(array|int $left, array|int $right): int
     {
         if (is_int($left) && is_int($right)) {
             return $right - $left;
         }
         if (is_int($left) || is_int($right)) {
-            if (empty(array($left))) {
+            if (empty([$left])) {
+                // Really PHP, I shouldn't have to check for empty arrays here...
                 return 1;
             }
-            return $this->compareList((array) $left, (array) $right, $depth + 1);
+
+            return $this->compareList((array) $left, (array) $right);
         }
 
         foreach ($left as $i => $v) {
             if (!isset($right[$i])) {
                 return -1;
             }
-            $c = $this->compareList($v, $right[$i], $depth+1);
+            $c = $this->compareList($v, $right[$i]);
             if ($c !== 0) {
                 return $c;
             }
