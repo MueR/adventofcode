@@ -18,7 +18,6 @@ use MueR\AdventOfCode\AbstractSolver;
 class Day13 extends AbstractSolver
 {
     private array $pairs;
-    private bool $debug = false;
 
     /**
      * Solver method for part 1 of the puzzle.
@@ -27,16 +26,14 @@ class Day13 extends AbstractSolver
      */
     public function partOne() : int
     {
-        $result = [];
+        $result = 0;
         foreach ($this->pairs as $i => $lists) {
-            $index = $i + 1;
-            [$left, $right] = $lists;
-            if ($this->compareList($left, $right) > 0) {
-                $result[] = $index;
+            if ($this->compareList(...$lists) > 0) {
+                $result += $i + 1;
             }
         }
 
-        return array_sum($result);
+        return $result;
     }
 
     /**
@@ -74,8 +71,6 @@ class Day13 extends AbstractSolver
 
     private function compareList(array|int $left, array|int $right, int $depth = 0): int
     {
-        $depthString = str_repeat(' ', $depth * 2);
-        $this->debug && printf("%s- Compare %s vs %s\n", $depthString, json_encode($left), json_encode($right));
         if (is_int($left) && is_int($right)) {
             return $right - $left;
         }
