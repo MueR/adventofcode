@@ -62,11 +62,10 @@ class Day13 extends AbstractSolver
         $input = explode(PHP_EOL . PHP_EOL, $this->readText());
         $this->pairs = [];
         foreach ($input as $set) {
-            [$left, $right] = array_map(
-                fn (string $packets) => json_decode($packets, true, 512, JSON_THROW_ON_ERROR),
+            $this->pairs[] = array_map(
+                static fn (string $packets) => json_decode($packets, true, 512, JSON_THROW_ON_ERROR),
                 explode(PHP_EOL, $set)
             );
-            $this->pairs[] = [$left, $right];
         }
     }
 
