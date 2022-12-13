@@ -38,22 +38,26 @@ class SolveCommand extends Command
     {
         $this->year = (int)$input->getOption('year');
         $days = $input->getOption('day') ? [(int)$input->getOption('day')] : range(1, 25);
+        $test = $input->getOption('test');
 
         $formatter = $this->getHelper('formatter');
+        $headerText = sprintf(
+            '%-50s%s%50s',
+            $test ? '[TEST INPUT]' : '',
+            'Advent of Code ' . $this->year,
+            $test ? '[TEST INPUT]' : ''
+        );
+        $headerSize = strlen($headerText);
         $header = $formatter->formatBlock([
             '',
-            sprintf('%42s%s%41s', ' ', 'Advent of Code ' . $this->year, ''),
+            $headerText,
             ''
-        ], 'bg=green;options=bold');
+        ], 'bg=' . ($test ? 'yellow' : 'green') . ';options=bold');
         $output->write([
             "\n",
             $header,
             "\n\n",
         ]);
-
-        if ($input->getOption('test')) {
-            $output->writeln('Using test input.');
-        }
 
         $this->table = new Table($output);
         $this->table
