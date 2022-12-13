@@ -36,34 +36,18 @@ class Day01 extends AbstractSolver
      */
     public function partTwo(): int
     {
-        return array_sum($this->calories);
+        return array_sum(array_slice($this->calories, 0, 3));
     }
 
     protected function parse(): void
     {
-        $file = $this->getFile();
-
-        $min = 0;
-        $calories = 0;
-        while (!feof($file)) {
-            $line = fgets($file);
-
-            if ($line !== PHP_EOL) {
-                $calories += (int) $line;
-                continue;
-            }
-
-            if ($calories > $min) {
-                $l = count($this->calories);
-                if ($l === 3) {
-                    array_pop($this->calories);
-                }
-                $this->calories[] = $calories;
-                rsort($this->calories, SORT_NUMERIC);
-                $min = $this->calories[max(0, $l - 1)];
-            }
-            $calories = 0;
-        }
+        $this->calories = array_map(
+            static fn (string $set) => array_sum(array_map(
+                static fn (string $calories) => (int) $calories,
+                explode(PHP_EOL, $set)
+            )),
+            explode(PHP_EOL . PHP_EOL, $this->readText())
+        );
         rsort($this->calories, SORT_NUMERIC);
     }
 }
