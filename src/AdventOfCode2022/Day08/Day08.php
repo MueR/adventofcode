@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace MueR\AdventOfCode\AdventOfCode2022\Day08;
 
 use MueR\AdventOfCode\AbstractSolver;
+use MueR\AdventOfCode\Util\StringUtil;
 
 /**
  * Day 8 puzzle.
@@ -62,7 +63,7 @@ class Day08 extends AbstractSolver
     protected function parse(): void
     {
         $this->trees = array_map(
-            static fn (string $line) => array_map(static fn (string $tree) => (int) $tree, str_split($line)),
+            static fn (string $line) => StringUtil::toIntArray($line, ''),
             explode(PHP_EOL, $this->readText())
         );
     }

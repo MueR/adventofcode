@@ -19,6 +19,16 @@ class StringUtil
     }
 
     /**
+     * Split a string into an int array.
+     *
+     * @return int[]
+     */
+    public static function toIntArray(string $string): array
+    {
+        return array_map(static fn (string $n) => (int) $n, str_split($string));
+    }
+
+    /**
      * Alphabetically sort characters in a string.
      */
     public static function sort(string $string): string

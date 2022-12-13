@@ -31,13 +31,12 @@ class Day11 extends AbstractSolver
         for ($i = 1; $i <= 20; $i++) {
             foreach ($this->monkeys as $monkey) {
                 while (!$monkey->items->isEmpty()) {
-                    $item = $monkey->items->pop();
                     $this->inspections[$monkey->number]++;
-                    $item = (int) floor($monkey->operation($item) / 3);
+                    $item = (int) floor($monkey->operation($monkey->items->pop()) / 3);
                     $target = $item % $monkey->divisibleBy === 0
                         ? $monkey->monkeyIfTrue
                         : $monkey->monkeyIfFalse;
-                    $this->monkeys[$target]->catch($item);
+                    $this->monkeys[$target]->items->push($item);
                 }
             }
         }
@@ -68,7 +67,7 @@ class Day11 extends AbstractSolver
                     $target = $item % $monkey->divisibleBy === 0
                         ? $monkey->monkeyIfTrue
                         : $monkey->monkeyIfFalse;
-                    $this->monkeys[$target]->catch($item);
+                    $this->monkeys[$target]->items->push($item);
                 }
             }
         }
