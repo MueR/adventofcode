@@ -1,0 +1,107 @@
+<?php
+/**
+ * Part of AdventOfCode 2022
+ */
+
+
+declare(strict_types=1);
+
+namespace MueR\AdventOfCode\AdventOfCode2022\Day13;
+
+use MueR\AdventOfCode\AbstractSolver;
+
+/**
+ * Day 13 puzzle.
+ *
+ * @see https://adventofcode.com/2022/day/13
+ */
+class Day13 extends AbstractSolver
+{
+    private array $pairs;
+    private bool $debug = false;
+
+    /**
+     * Solver method for part 1 of the puzzle.
+     *
+     * @see https://adventofcode.com/2022/day/13
+     */
+    public function partOne() : int
+    {
+        $result = [];
+        foreach ($this->pairs as $i => $lists) {
+            $index = $i + 1;
+            [$left, $right] = $lists;
+            if ($this->compareList($left, $right) > 0) {
+                $result[] = $index;
+            }
+        }
+
+        return array_sum($result);
+    }
+
+    /**
+     * Solver method for part 2 of the puzzle.
+     *
+     * @see https://adventofcode.com/2022/day/13#part2
+     */
+    public function partTwo() : int
+    {
+        $targetOne = [[2]];
+        $targetTwo = [[6]];
+        $items = [$targetOne, $targetTwo];
+        foreach ($this->pairs as $pair) {
+            $items[] = $pair[0];
+            $items[] = $pair[1];
+        }
+        usort($items, [$this, 'compareList']);
+        $items = array_reverse($items);
+        $found = [array_search($targetOne, $items)+1, array_search($targetTwo, $items)+1];
+        return array_product($found);
+    }
+
+    protected function parse(): void
+    {
+        $input = explode(PHP_EOL . PHP_EOL, $this->readText());
+        $this->pairs = [];
+        foreach ($input as $set) {
+            [$left, $right] = array_map(
+                fn (string $packets) => json_decode($packets, true, 512, JSON_THROW_ON_ERROR),
+                explode(PHP_EOL, $set)
+            );
+            $this->pairs[] = [$left, $right];
+        }
+    }
+
+    private function compareList(array|int $left, array|int $right, int $depth = 0): int
+    {
+        $depthString = str_repeat(' ', $depth * 2);
+        $this->debug && printf("%s- Compare %s vs %s\n", $depthString, json_encode($left), json_encode($right));
+        if (is_int($left) && is_int($right)) {
+            return $right - $left;
+        }
+        if (is_int($left) || is_int($right)) {
+            if (empty(array($left))) {
+                return 1;
+            }
+            return $this->compareList((array) $left, (array) $right, $depth + 1);
+        }
+
+        foreach ($left as $i => $v) {
+            if (!isset($right[$i])) {
+                return -1;
+            }
+            $c = $this->compareList($v, $right[$i], $depth+1);
+            if ($c !== 0) {
+                return $c;
+            }
+        }
+        foreach ($right as $i => $v) {
+            if (!isset($left[$i])) {
+                return 1;
+            }
+        }
+
+        return count($left) - count($right);
+    }
+}
+
