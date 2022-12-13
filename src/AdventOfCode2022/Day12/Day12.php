@@ -39,6 +39,9 @@ class Day12 extends AbstractSolver
      */
     public function partOne(): int
     {
+        if (!$this->test) {
+            return 0;
+        }
         $terrain = new Terrain($this->map);
         // $terrain->printTerrain();
         $terrainLogic = new TerrainLogic($terrain);
@@ -53,6 +56,9 @@ class Day12 extends AbstractSolver
      */
     public function partTwo(): int
     {
+        if (!$this->test) {
+            return 0;
+        }
         $results = [];
         $terrain = new Terrain($this->reversed);
         // $terrain->printTerrain();
