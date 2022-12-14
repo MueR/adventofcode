@@ -73,7 +73,7 @@ class SolveCommand extends Command
                     sprintf(
                         '[%s] in %s on line %d:',
                         get_class($e),
-                        sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $this->year, $day, $day),
+                        $e->getFile(), // sprintf(AdventOfCode::NAMESPACE_TEMPLATE, $this->year, $day, $day),
                         $e->getLine()
                     ),
                     $e->getMessage(),

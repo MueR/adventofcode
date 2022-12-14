@@ -47,7 +47,7 @@ class TerrainLogic implements DomainLogicInterface
     public function calculateRealCost(mixed $node, mixed $adjacent): float|int
     {
         if ($node->isNeighbour($adjacent)) {
-            return $this->terrainCost->getCost($adjacent->y, $adjacent->x);
+            return 1; //$this->terrainCost->getCost($adjacent->y, $adjacent->x);
         }
 
         return Terrain::INFINITE;
@@ -70,7 +70,7 @@ class TerrainLogic implements DomainLogicInterface
         }
     }
 
-    public function getPoint(int $y, int $x)
+    public function getPoint(int $y, int $x): Point
     {
         return $this->points[$y][$x];
     }

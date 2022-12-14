@@ -10,6 +10,8 @@ namespace MueR\AdventOfCode\AdventOfCode2022\Day12;
 
 use MueR\AdventOfCode\AbstractSolver;
 use MueR\AdventOfCode\Util\Algorithm\AStar\AStar;
+use MueR\AdventOfCode\Util\Algorithm\BreadthFirstSearch;
+use MueR\AdventOfCode\Util\Algorithm\Dijkstra;
 use MueR\AdventOfCode\Util\Point;
 
 /**
@@ -19,10 +21,8 @@ use MueR\AdventOfCode\Util\Point;
  */
 class Day12 extends AbstractSolver
 {
-    private Point $start;
-    private Point $end;
-    private array $map;
-    private array $reversed;
+    private int $costOne = 0;
+    private int $costTwo = 0;
 
     /**
      * Solver method for part 1 of the puzzle.
@@ -31,14 +31,7 @@ class Day12 extends AbstractSolver
      */
     public function partOne(): int
     {
-        if (!$this->test) {
-            return 0;
-        }
-        $terrain = new Terrain($this->map);
-        // $terrain->printTerrain();
-        $terrainLogic = new TerrainLogic($terrain);
-        $aStar = new AStar($terrainLogic);
-        return count($aStar->run($this->start, $this->end)) - 1;
+        return $this->costOne;
     }
 
     /**
@@ -48,31 +41,14 @@ class Day12 extends AbstractSolver
      */
     public function partTwo(): int
     {
-        if (!$this->test) {
-            return 0;
-        }
-        $results = [];
-        $terrain = new Terrain($this->reversed);
-        // $terrain->printTerrain();
-        $terrainLogic = new TerrainLogic($terrain);
-        $aStar = new AStar($terrainLogic);
-        foreach ($this->reversed as $y => $row) {
-            foreach ($row as $x => $height) {
-                if ($height === 26) {
-                    $run = $aStar->run($this->end, $terrainLogic->getPoint($y, $x));
-                    if (!empty($run)) {
-                        $results[] = count($run);
-                    }
-                }
-            }
-        }
-        return empty($results) ? 0 : min($results) - 1;
+        return $this->costTwo;
     }
 
     protected function parse(): void
     {
         $base = ord('a') - 1;
         $this->map = [];
+        $lowestPoints = [];
         foreach (explode(PHP_EOL, $this->readText()) as $y => $line) {
             $this->map[$y] = [];
             foreach (str_split($line) as $x => $char) {
@@ -81,17 +57,42 @@ class Day12 extends AbstractSolver
                     'E' => 27,
                     default => ord($char) - $base,
                 };
-                $this->map[$y][$x] = $value;
-                $this->reversed[$y][$x] = max(abs($value - 27), 0);
-                $point = new Point($x, $y);
+                $point = new ElevatedPoint($x, $y, $value);
+                $this->map[$y][$x] = $point;
                 if ($char === 'S') {
-                    $this->start = $point;
+                    $start = (string) $point;
                 }
                 if ($char === 'E') {
-                    $this->end = $point;
+                    $end = (string) $point;
+                }
+                if ($value <= 1) {
+                    $lowestPoints[] = (string) $point;
                 }
             }
         }
+
+        $bfs = new BreadthFirstSearch();
+        $graph = $this->buildGraph($this->map);
+        $this->costOne = count($bfs->getPath($graph, $end, [$start])) - 1;
+        $this->costTwo = count($bfs->getPath($graph, $end, $lowestPoints)) - 1;
+    }
+
+    /**
+     * @param ElevatedPoint[][] $grid
+     */
+    private function buildGraph(array $grid): array
+    {
+        $graph = [];
+
+        foreach ($grid as $rows) {
+            foreach ($rows as $point) {
+                foreach ($point->getNeighbours($grid) as $neighbour) {
+                    $graph[(string) $point][] = (string) $neighbour;
+                }
+            }
+        }
+
+        return $graph;
     }
 }
 

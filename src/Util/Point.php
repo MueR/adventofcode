@@ -12,22 +12,22 @@ class Point implements \Stringable, NodeIdentifierInterface
     ) {
     }
 
-    public function equals(Point $point): bool
+    public function equals(self $point): bool
     {
         return $this->x === $point->x && $this->y === $point->y;
     }
 
-    public function isNeighbour(Point $point): bool
+    public function isNeighbour(self $point): bool
     {
         return abs($this->x - $point->x) <= 1 || abs($this->y - $point->y) <= 1;
     }
 
-    public function isTouching(Point $point): bool
+    public function isTouching(self $point): bool
     {
         return abs($this->x - $point->x) <= 1 && abs($this->y - $point->y) <= 1;
     }
 
-    public function move(string $direction, int $amount = 1): Point
+    public function move(string $direction, int $amount = 1): self
     {
         return match ($direction) {
             'N', 'U' => $this->up(),
@@ -37,39 +37,54 @@ class Point implements \Stringable, NodeIdentifierInterface
         };
     }
 
-    public function up(int $amount = 1): Point
+    public function up(int $amount = 1): self
     {
         return $this->translate(0, $amount);
     }
 
-    public function down(int $amount = -1): Point
+    public function down(int $amount = -1): self
     {
         return $this->translate(0, $amount);
     }
 
-    public function left(int $amount = -1): Point
+    public function left(int $amount = -1): self
     {
         return $this->translate($amount, 0);
     }
 
-    public function right(int $amount = 1): Point
+    public function right(int $amount = 1): self
     {
         return $this->translate($amount, 0);
     }
 
-    public function translate(int $x, int $y): Point
+    public function translate(int $x, int $y): self
     {
         return new Point($this->x + $x, $this->y + $y);
     }
 
-    public function getNeighbours(): array
+    /**
+     * @return Point[]
+     */
+    public function getNeighbours(?array $grid = null): array
     {
-        return [
-            new Point($this->x, $this->y - 1),
-            new Point($this->x - 1, $this->y),
-            new Point($this->x, $this->y + 1),
-            new Point($this->x + 1, $this->y),
-        ];
+        if ($grid) {
+            // Since PHP makes unique references, allow the use of the original values.
+            $neighbours = [
+                $grid[$this->y - 1][$this->x] ?? null,
+                $grid[$this->y + 1][$this->x] ?? null,
+                $grid[$this->y][$this->x - 1] ?? null,
+                $grid[$this->y][$this->x + 1] ?? null,
+            ];
+        } else {
+            $neighbours = [
+                new Point($this->x, $this->y - 1),
+                new Point($this->x - 1, $this->y),
+                new Point($this->x, $this->y + 1),
+                new Point($this->x + 1, $this->y),
+            ];
+        }
+
+        return array_filter($neighbours);
     }
 
     public function __toString(): string
