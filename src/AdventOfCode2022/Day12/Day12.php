@@ -8,14 +8,8 @@ declare(strict_types=1);
 
 namespace MueR\AdventOfCode\AdventOfCode2022\Day12;
 
-use Ds\Map;
-use Ds\PriorityQueue;
-use Ds\Queue;
-use Ds\Set;
 use MueR\AdventOfCode\AbstractSolver;
 use MueR\AdventOfCode\Util\Algorithm\AStar\AStar;
-use MueR\AdventOfCode\Util\Algorithm\AStar\Node\Collection\NodeHashTable;
-use MueR\AdventOfCode\Util\Algorithm\AStar\Node\Node;
 use MueR\AdventOfCode\Util\Point;
 
 /**
@@ -29,8 +23,6 @@ class Day12 extends AbstractSolver
     private Point $end;
     private array $map;
     private array $reversed;
-    private Terrain $terrain;
-    private TerrainLogic $terrainLogic;
 
     /**
      * Solver method for part 1 of the puzzle.
@@ -75,27 +67,6 @@ class Day12 extends AbstractSolver
             }
         }
         return empty($results) ? 0 : min($results) - 1;
-        foreach ($r as $point) {
-            if ($this->terrain->getCost($point->y,  $point->x) === 26) {
-                $c--;
-            }
-        }
-
-        return $c;
-        print "Start is $this->end\n";
-        $this->terrain->printTerrain();
-        foreach ($this->map as $y => $row) {
-            foreach ($row as $x => $height) {
-                if ($height > 1) {
-                    continue;
-                }
-                $point = new Point($x, $y);
-                $r = count($aStar->run($this->end, $point));
-                $results[(string)$point] = $r;
-            }
-        }
-
-        return min($results) - 1;
     }
 
     protected function parse(): void
