@@ -24,7 +24,16 @@ class Day14 extends AbstractSolver
      */
     public function partOne() : int
     {
-        return -1;
+        $cave = new Cave($this->readText());
+        while (true) {
+            $endPosition = $cave->moveSand([500, 0]);
+            if ($endPosition === false) {
+                break;
+            }
+            $cave->addSand($endPosition);
+        }
+
+        return $cave->getSandCount();
     }
 
     /**
@@ -34,7 +43,16 @@ class Day14 extends AbstractSolver
      */
     public function partTwo() : int
     {
-        return -1;
+        $cave = new Cave($this->readText());
+        while (true) {
+            $endPosition = $cave->moveSandWithFloor([500, 0]);
+            $cave->addSand($endPosition);
+            if ($endPosition === [500, 0]) {
+                break;
+            }
+        }
+
+        return $cave->getSandCount();
     }
 }
 

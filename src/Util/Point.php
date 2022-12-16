@@ -87,6 +87,21 @@ class Point implements \Stringable, NodeIdentifierInterface
         return array_filter($neighbours);
     }
 
+    /**
+     * @return self[]
+     */
+    public function lineTo(self $point): array
+    {
+        if ($this->x === $point->x) {
+            return array_map(fn (int $y) => new self($this->x, $y), range($this->y, $point->y));
+        }
+        if ($this->y === $point->y) {
+            return array_map(fn (int $x) => new self($x, $this->y), range($this->x, $point->x));
+        }
+
+        throw new \InvalidArgumentException('Points are not on the same horizontal or vertical line.');
+    }
+
     public function __toString(): string
     {
         return $this->getUniqueNodeId();

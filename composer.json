@@ -12,7 +12,8 @@
     "ext-mbstring": "*",
     "symfony/console": "^6.0",
     "symfony/stopwatch": "^6.0",
-    "php-ds/php-ds": "^1.4"
+    "php-ds/php-ds": "^1.4",
+    "illuminate/collections": "^9.44"
   },
   "autoload": {
     "psr-4": {
