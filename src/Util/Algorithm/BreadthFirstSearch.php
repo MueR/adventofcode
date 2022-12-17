@@ -30,9 +30,6 @@ class BreadthFirstSearch
 
                     $newPath = $path;
                     $newPath[] = $neighbour;
-                    if ($neighbour === 'Point<4,31>') {
-                        print $node . "\n";
-                    }
 
                     $queue->enqueue($newPath);
                 }

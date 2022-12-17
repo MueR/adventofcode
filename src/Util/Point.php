@@ -102,6 +102,11 @@ class Point implements \Stringable, NodeIdentifierInterface
         throw new \InvalidArgumentException('Points are not on the same horizontal or vertical line.');
     }
 
+    public function manhattanTo(Point $p): int
+    {
+        return abs($p->x - $this->x) + abs($p->y - $this->y);
+    }
+
     public function __toString(): string
     {
         return $this->getUniqueNodeId();
